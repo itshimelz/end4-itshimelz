@@ -2,6 +2,19 @@
 import json
 import os
 import subprocess
+from PIL import Image, ImageDraw
+
+def create_rounded_png(filepath, width, height, radius, fill_color, outline_color=None, outline_width=1):
+    img = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    draw.rounded_rectangle(
+        [0, 0, width - 1, height - 1],
+        radius=radius,
+        fill=fill_color,
+        outline=outline_color,
+        width=outline_width if outline_color else 0
+    )
+    img.save(filepath, "PNG")
 
 def main():
     home = os.path.expanduser("~")
@@ -22,64 +35,75 @@ def main():
     primary = colors.get("primary", "#b4befe")
     on_primary = colors.get("on_primary", "#11111b")
     primary_container = colors.get("primary_container", "#45475a")
-    outline = colors.get("outline_variant", "#313244")
+    outline = colors.get("outline_variant", "#484648")
 
     theme_dir = os.path.join(home, ".local/share/fcitx5/themes/Material-Dynamic")
     os.makedirs(theme_dir, exist_ok=True)
+    
+    # Generate rounded background and highlight PNGs
+    panel_png = os.path.join(theme_dir, "panel.png")
+    highlight_png = os.path.join(theme_dir, "highlight.png")
+
+    create_rounded_png(panel_png, width=48, height=48, radius=16, fill_color=surface, outline_color=outline, outline_width=1)
+    create_rounded_png(highlight_png, width=36, height=36, radius=10, fill_color=primary)
+
     theme_conf_path = os.path.join(theme_dir, "theme.conf")
 
     theme_content = f"""[Metadata]
 Name=Material-Dynamic
 Version=0.1
 Author=end4-itshimelz
-Description=Dynamic Material 3 Theme for Fcitx5
+Description=Dynamic Material 3 Theme for Fcitx5 with Rounded Corners
 ScaleWithDPI=True
 
 [InputPanel]
 Font=Sans 11
 NormalColor={on_surface}
 HighlightCandidateColor={on_primary}
-HighlightColor={primary}
-HighlightBackgroundColor={surface}
+HighlightColor={on_primary}
 Spacing=6
 
 [InputPanel/TextMargin]
-Left=12
-Right=12
-Top=8
-Bottom=8
+Left=14
+Right=14
+Top=10
+Bottom=10
 
 [InputPanel/Background]
-Color={surface}
-BorderColor={outline}
-BorderWidth=1
+Image=panel.png
 
 [InputPanel/Background/Margin]
-Left=6
-Right=6
+Left=18
+Right=18
+Top=18
+Bottom=18
+
+[InputPanel/Highlight]
+Image=highlight.png
+
+[InputPanel/Highlight/Margin]
+Left=10
+Right=10
 Top=6
 Bottom=6
 
-[InputPanel/Highlight]
-Color={primary}
-
-[InputPanel/Highlight/Margin]
-Left=8
-Right=8
-Top=5
-Bottom=5
-
 [Menu/Background]
-Color={surface}
+Image=panel.png
+
+[Menu/Background/Margin]
+Left=18
+Right=18
+Top=18
+Bottom=18
 
 [Menu/Highlight]
-Color={primary_container}
+Image=highlight.png
 
 [Menu/Highlight/Margin]
-Left=8
-Right=8
-Top=5
-Bottom=5
+Left=10
+Right=10
+Top=6
+Bottom=6
 """
 
     with open(theme_conf_path, "w") as f:
@@ -116,7 +140,8 @@ Bottom=5
         f.writelines(new_lines)
 
     try:
-        subprocess.run(["fcitx5-remote", "-r"], check=False)
+        subprocess.run(["killall", "fcitx5"], check=False)
+        subprocess.Popen(["fcitx5", "-d"])
     except Exception:
         pass
 
