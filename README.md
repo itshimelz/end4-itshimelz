@@ -1,13 +1,10 @@
-
-
-
-
 <div align="center">
 
-# 💠 end4-pC
+# 💠 end4-itshimelz
 
-**A personal fork of [illogical-impulse](https://github.com/end-4/dots-hyprland) by [@end-4](https://github.com/end-4)**  
-Customized and maintained by **pctrade**
+**A customized fork of [illogical-impulse](https://github.com/end-4/dots-hyprland) by [@end-4](https://github.com/end-4)**  
+
+Created by **[@end-4](https://github.com/end-4)** • Customized & Maintained by **[@itshimelz](https://github.com/itshimelz)**
 
 [English](README.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
 
@@ -22,8 +19,6 @@ Customized and maintained by **pctrade**
     <img src="https://img.youtube.com/vi/o0Vsh7eVchs/maxresdefault.jpg" alt="Material 3 Expressive x Linux" width="85%" style="border-radius: 12px; box-shadow: 0px 10px 30px rgba(0,0,0,0.5);"/>
   </a>
 </p>
-
-</div>
 
 ---
 
@@ -49,8 +44,8 @@ Customized and maintained by **pctrade**
 
 ```bash
 cd ~/.config/quickshell/
-git clone https://github.com/pctrade/end4-pC.git
-killall qs 2>/dev/null; qs -c end4-pC > /dev/null 2>&1 & disown
+git clone https://github.com/itshimelz/end4-itshimelz.git
+killall qs 2>/dev/null; qs -c end4-itshimelz > /dev/null 2>&1 & disown
 ```
 
 ### 🔧 Set as your default shell (optional)
@@ -70,7 +65,7 @@ hl.env("qsConfig", "ii")
 to:
 
 ```lua
-hl.env("qsConfig", "end4-pC")
+hl.env("qsConfig", "end4-itshimelz")
 ```
 
 > [!TIP]
@@ -78,28 +73,29 @@ hl.env("qsConfig", "end4-pC")
 
 ---
 
-### ⚙️ Settings keybind
+### ⚙️ Keybindings
 
-To open the settings panel, add this to your Hyprland config:
+- **Settings Panel**: `Super + I`
+- **Cheatsheet**: `Super + /`
+- **Right Sidebar**: `Super + N`
+- **Left Sidebar**: `Super + A`
+- **Media Controls**: `Super + M`
 
-```lua
-hl.bind("SUPER + escape", hl.dsp.global("quickshell:settingsToggle"), {description = "Toggle settings"})
-```
+---
 
-> **Note:** Settings is an overlay panel, not a regular window — `Super + Q` won't close it. Use the same keybind to toggle it or press `Escape`.
+## 🙏 Credits & Acknowledgments
 
-## 🙏 Credits
+Huge thanks to the original creators and contributors who made this project possible:
 
-Huge thanks to the people who made this possible:
-
-- **[@end-4](https://github.com/end-4)** — for creating the original [dots-hyprland](https://github.com/end-4/dots-hyprland) / illogical-impulse shell. An absolute masterpiece of a dotfiles project 🫡
-- **[@gh0stzk](https://github.com/gh0stzk)** — for providing the weather API integration that made the weather widget possible 🙌
-- **[@StarS2112](https://github.com/StarS2112)** — for showcasing this fork 🙌
+- **[@end-4](https://github.com/end-4)** — Original author & creator of [dots-hyprland](https://github.com/end-4/dots-hyprland) / illogical-impulse shell. An absolute masterpiece of a Linux dotfiles project 🫡
+- **[@itshimelz](https://github.com/itshimelz)** — Customization, PipeWire audio port switcher, instant MPRIS player sync, responsive keybind cheatsheet, and maintenance 🚀
+- **[@gh0stzk](https://github.com/gh0stzk)** — Weather API integration that powers the weather widget 🙌
+- **[@StarS2112](https://github.com/StarS2112)** — Showcase and community support 🙌
 
 ---
 
 <div align="center">
 
-Made with ❤️ — feel free to fork and make it your own
+Made with ❤️ by **itshimelz** — based on work by **end-4**
 
 </div>
