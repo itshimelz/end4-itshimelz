@@ -357,6 +357,7 @@ switch() {
 
     if [[ -z "$colors_lock_flag" ]]; then
         "$SCRIPT_DIR"/applycolor.sh
+        python3 "$SCRIPT_DIR/update_fcitx5_theme.py"
     fi
 
     max_width_desired="$(hyprctl monitors -j | jq '([.[].width] | min)' | xargs)"
