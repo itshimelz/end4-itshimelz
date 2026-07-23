@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.modules.common
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import Quickshell.Services.Pipewire
 
 /**
@@ -18,6 +19,12 @@ Singleton {
     readonly property real hardMaxValue: 2.00 // People keep joking about setting volume to 5172% so...
     property string audioTheme: Config.options.sounds.theme
     property real value: sink?.audio.volume ?? 0
+
+    // Audio Output Sink Ports (e.g. Line Out / Speaker vs Headphones)
+    property list<var> outputSinkPorts: []
+    property string activeSinkPortName: ""
+    property string outputSinkPactlName: ""
+    property bool switchingPortOrDevice: false
     
     function friendlyDeviceName(node) {
         return (node.nickname || node.description || Translation.tr("Unknown"));
@@ -31,7 +38,7 @@ Singleton {
         return (node.isSink === isSink) && node.audio
     }
     function appNodes(isSink) {
-        return Pipewire.nodes.values.filter((node) => { // Should be list<PwNode> but it breaks ScriptModel
+        return Pipewire.nodes.values.filter((node) => {
             return root.correctType(node, isSink) && node.isStream
         })
     }
@@ -70,11 +77,139 @@ Singleton {
     }
 
     function setDefaultSink(node) {
+        root.switchingPortOrDevice = true;
+        volumeProtectionConn.resetState();
         Pipewire.preferredDefaultAudioSink = node;
+        pactlPortsRefreshTimer.restart();
+        portSwitchGuardTimer.restart();
     }
 
     function setDefaultSource(node) {
         Pipewire.preferredDefaultAudioSource = node;
+    }
+
+    onSinkChanged: {
+        volumeProtectionConn.resetState();
+    }
+
+    /** Refresh output port list for Pipewire.defaultAudioSink */
+    function refreshSinkPortsFromPactl() {
+        if (!Pipewire.ready || !Pipewire.defaultAudioSink) {
+            root.outputSinkPorts = [];
+            root.activeSinkPortName = "";
+            root.outputSinkPactlName = "";
+            return;
+        }
+        pactlListSinks.running = true;
+    }
+
+    function setSinkPortByPortName(portName) {
+        if (!portName || !root.outputSinkPactlName)
+            return;
+        root.switchingPortOrDevice = true;
+        volumeProtectionConn.resetState();
+        Quickshell.execDetached(["pactl", "set-sink-port", root.outputSinkPactlName, portName]);
+        root.activeSinkPortName = portName;
+        pactlPortsRefreshTimer.restart();
+        portSwitchGuardTimer.restart();
+    }
+
+    Timer {
+        id: portSwitchGuardTimer
+        interval: 1200
+        repeat: false
+        onTriggered: root.switchingPortOrDevice = false
+    }
+
+    function pactlSinkMatchesNode(sinkJson, node) {
+        if (!node || !sinkJson)
+            return false;
+        const pactlName = sinkJson.name || "";
+        const propName = node.properties["node.name"] || "";
+        if (propName && (propName === pactlName || pactlName.endsWith(propName) || propName.endsWith(pactlName)))
+            return true;
+        if (node.name && (node.name === pactlName || pactlName.includes(node.name) || node.name.includes(pactlName)))
+            return true;
+        const nd = (node.description || "").trim().toLowerCase();
+        const jd = (sinkJson.description || "").trim().toLowerCase();
+        if (nd && jd && (nd === jd || jd.includes(nd) || nd.includes(jd)))
+            return true;
+        return false;
+    }
+
+    function friendlySinkPortDescription(port) {
+        if (!port)
+            return "";
+        const portName = (port.name || "").toLowerCase();
+        if (portName === "analog-output-lineout")
+            return "Speaker";
+        const raw = (port.description || port.name || "").trim();
+        if (/line\s*out/i.test(raw))
+            return "Speaker";
+        return raw || port.name || "";
+    }
+
+    function _applyPactlSinksJson(text) {
+        root.outputSinkPorts = [];
+        root.activeSinkPortName = "";
+        root.outputSinkPactlName = "";
+        if (!text || typeof text !== "string")
+            return;
+        const trimmed = text.trim();
+        if (!trimmed)
+            return;
+        let sinks;
+        try {
+            sinks = JSON.parse(trimmed);
+        } catch (e) {
+            return;
+        }
+        if (!Array.isArray(sinks))
+            return;
+        const node = Pipewire.defaultAudioSink;
+        if (!node)
+            return;
+        const sinkJson = sinks.find(s => root.pactlSinkMatchesNode(s, node));
+        if (!sinkJson || !sinkJson.name)
+            return;
+        root.outputSinkPactlName = sinkJson.name;
+        const active = sinkJson.active_port;
+        root.activeSinkPortName = typeof active === "string" ? active : "";
+        const portsRaw = sinkJson.ports;
+        if (!Array.isArray(portsRaw))
+            return;
+        const out = [];
+        for (let i = 0; i < portsRaw.length; i++) {
+            const p = portsRaw[i];
+            if (!p || !p.name)
+                continue;
+            const av = (p.availability || "").toLowerCase();
+            if (av === "not available")
+                continue;
+            out.push({
+                name: p.name,
+                description: root.friendlySinkPortDescription(p)
+            });
+        }
+        root.outputSinkPorts = out;
+    }
+
+    Timer {
+        id: pactlPortsRefreshTimer
+        interval: 200
+        repeat: false
+        onTriggered: root.refreshSinkPortsFromPactl()
+    }
+
+    Process {
+        id: pactlListSinks
+        command: ["pactl", "-f", "json", "list", "sinks"]
+        stdout: StdioCollector {
+            id: pactlListSinksOut
+            onStreamFinished: {
+                root._applyPactlSinksJson(pactlListSinksOut.text);
+            }
+        }
     }
 
     // Internals
@@ -83,13 +218,19 @@ Singleton {
     }
 
     Connections { // Protection against sudden volume changes
+        id: volumeProtectionConn
         target: sink?.audio ?? null
         property bool lastReady: false
         property real lastVolume: 0
+
+        function resetState() {
+            lastReady = false;
+            lastVolume = 0;
+        }
+
         function onVolumeChanged() {
-            if (!Config.options.audio.protection.enable) return;
+            if (!Config.options.audio.protection.enable || root.switchingPortOrDevice) return;
             const newVolume = sink.audio.volume;
-            // when resuming from suspend, we should not write volume to avoid pipewire volume reset issues
             if (isNaN(newVolume) || newVolume === undefined || newVolume === null) {
                 lastReady = false;
                 lastVolume = 0;
@@ -114,11 +255,24 @@ Singleton {
         }
     }
 
+    Connections {
+        target: Pipewire
+        function onDefaultAudioSinkChanged() {
+            volumeProtectionConn.resetState();
+            pactlPortsRefreshTimer.restart();
+        }
+        function onReadyChanged() {
+            if (Pipewire.ready) {
+                volumeProtectionConn.resetState();
+                pactlPortsRefreshTimer.restart();
+            }
+        }
+    }
+
     function playSystemSound(soundName) {
         const ogaPath = `/usr/share/sounds/${root.audioTheme}/stereo/${soundName}.oga`;
         const oggPath = `/usr/share/sounds/${root.audioTheme}/stereo/${soundName}.ogg`;
 
-        // Try playing .oga first
         let command = [
             "ffplay",
             "-nodisp",
@@ -127,7 +281,6 @@ Singleton {
         ];
         Quickshell.execDetached(command);
 
-        // Also try playing .ogg (ffplay will just fail silently if file doesn't exist)
         command = [
             "ffplay",
             "-nodisp",

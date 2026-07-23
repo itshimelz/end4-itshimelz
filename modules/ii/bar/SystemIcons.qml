@@ -15,8 +15,8 @@ Item {
     property bool vertical: Config.options.bar.vertical
     property bool isMaterial: Config.options.bar.cornerStyle === 3
 
-    implicitWidth: root.vertical ? 32 : flow.implicitWidth + 4
-    implicitHeight: root.vertical ? flow.implicitHeight + 4 : 32
+    implicitWidth: root.vertical ? 32 : rowLayout.implicitWidth + 8
+    implicitHeight: root.vertical ? rowLayout.implicitHeight + 8 : 32
 
     MouseArea {
         anchors.fill: parent
@@ -25,13 +25,13 @@ Item {
         }
     }
 
-    Flow {
-        id: flow
+    RowLayout {
+        id: rowLayout
         anchors.centerIn: parent
-        flow: root.vertical ? Flow.TopToBottom : Flow.LeftToRight
-        spacing: isMaterial ? 2 : 10
+        spacing: isMaterial ? 6 : 10
 
         Revealer {
+            Layout.alignment: Qt.AlignVCenter
             reveal: true
             MaterialSymbol {
                 text: Audio.sink?.audio?.muted ? "volume_off" : "volume_up"
@@ -40,6 +40,7 @@ Item {
             }
         }
         Revealer {
+            Layout.alignment: Qt.AlignVCenter
             reveal: Audio.source?.audio?.muted ?? false
             MaterialSymbol {
                 text: "mic_off"
@@ -47,16 +48,14 @@ Item {
                 color: root.isMaterial ? Appearance.colors.colOnPrimary : Appearance.colors.colOnLayer1
             }
         }
-        Loader {
-            source: "HyprlandXkbIndicator.qml"
-            onLoaded: item.color = root.isMaterial ? Appearance.colors.colOnPrimary : Appearance.colors.colOnLayer1
-        }
         MaterialSymbol {
+            Layout.alignment: Qt.AlignVCenter
             text: Network.materialSymbol
             iconSize: Appearance.font.pixelSize.larger
             color: root.isMaterial ? Appearance.colors.colOnPrimary : Appearance.colors.colOnLayer1
         }
         MaterialSymbol {
+            Layout.alignment: Qt.AlignVCenter
             visible: BluetoothStatus.available
             text: BluetoothStatus.connected ? "bluetooth_connected" : BluetoothStatus.enabled ? "bluetooth" : "bluetooth_disabled"
             iconSize: Appearance.font.pixelSize.larger
@@ -64,6 +63,7 @@ Item {
         }
         Loader {
             id: notifLoader
+            Layout.alignment: Qt.AlignVCenter
             active: Notifications.silent || Notifications.unread > 0
             visible: active
             width: active ? item?.implicitWidth ?? 0 : 0

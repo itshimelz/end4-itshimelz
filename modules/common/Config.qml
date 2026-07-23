@@ -302,6 +302,18 @@ Singleton {
                         property real y: 100
                     }
 
+                    property JsonObject cheatsheet: JsonObject {
+                        property string superKey: ""
+                        property bool useMacSymbol: false
+                        property bool splitButtons: false
+                        property bool useMouseSymbol: false
+                        property bool useFnSymbol: false
+                        property JsonObject fontSize: JsonObject {
+                            property int key: Appearance.font.pixelSize.smaller
+                            property int comment: Appearance.font.pixelSize.smaller
+                        }
+                    }
+
                     property JsonObject images: JsonObject {
                         property bool enable: false
                         property string placementStrategy: "free"
@@ -383,6 +395,12 @@ Singleton {
                 property bool showBackground: true
                 property bool verbose: true
                 property bool vertical: false
+                // Narrow, non-intrusive zones at the bar edges. They mirror the
+                // sidebar/scroll interaction pattern without competing with bar widgets.
+                property JsonObject edgeScroll: JsonObject {
+                    property bool enable: true
+                    property int width: 28
+                }
                 property JsonObject resources: JsonObject {
                     property string style: "filled"
                     property bool showValue: false

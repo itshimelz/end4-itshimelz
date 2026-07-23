@@ -28,7 +28,7 @@ RippleButton {
             Layout.leftMargin: 5
             color: Appearance.colors.colOnLayer2
             iconSize: Appearance.font.pixelSize.hugeass
-            text: input ? "mic_external_on" : "media_output"
+            text: input ? "mic_external_on" : (Audio.activeSinkPortName.includes("headphone") ? "headphones" : "media_output")
         }
 
         ColumnLayout {
@@ -46,7 +46,16 @@ RippleButton {
                 Layout.fillWidth: true
                 elide: Text.ElideRight
                 font.pixelSize: Appearance.font.pixelSize.smaller
-                text: (input ? Pipewire.defaultAudioSource?.description : Pipewire.defaultAudioSink?.description) ?? Translation.tr("Unknown")
+                text: {
+                    if (input) {
+                        return Pipewire.defaultAudioSource?.description ?? Translation.tr("Unknown")
+                    }
+                    const activePort = Audio.outputSinkPorts.find(p => p.name === Audio.activeSinkPortName)
+                    if (activePort && activePort.description) {
+                        return activePort.description
+                    }
+                    return Pipewire.defaultAudioSink?.description ?? Translation.tr("Unknown")
+                }
                 color: Appearance.m3colors.m3outline
                 animateChange: true
             }

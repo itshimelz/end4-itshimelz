@@ -29,6 +29,8 @@ Item {
     readonly property var effectiveLeftLayout:   filterLayout(Config.options.bar.layouts.leftLayout)
     readonly property var effectiveMiddleLayout: filterLayout(Config.options.bar.layouts.middleLayout)
     readonly property var effectiveRightLayout:  filterLayout(Config.options.bar.layouts.rightLayout)
+    readonly property var edgeScrollOptions: Config.options.bar.edgeScroll
+    readonly property real edgeScrollWidth: Math.max(18, edgeScrollOptions?.width ?? 28)
 
     function getWidgetUrl(name) {
         if (!name) return "";
@@ -385,6 +387,66 @@ Item {
                     }
                 }
             }
+        }
+    }
+
+    // Keep the screen-edge gestures independent from the configurable widget rows.
+    // This lets widgets such as Workspaces retain their own click and scroll actions.
+    FocusedScrollMouseArea {
+        id: leftEdgeScroll
+        z: 10
+        visible: root.edgeScrollOptions?.enable ?? true
+        enabled: visible
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        width: root.edgeScrollWidth
+        acceptedButtons: Qt.LeftButton
+
+        onScrollDown: Brightness.decreaseBrightness()
+        onScrollUp: Brightness.increaseBrightness()
+        onMovedAway: GlobalStates.osdBrightnessOpen = false
+        onPressed: mouse => {
+            GlobalStates.sidebarLeftOpen = !GlobalStates.sidebarLeftOpen
+            mouse.accepted = false
+        }
+
+        ScrollHint {
+            reveal: leftEdgeScroll.hovered
+            icon: Hyprsunset.gamma === 100 ? "light_mode" : "wb_twilight"
+            tooltipText: Translation.tr("Scroll to change brightness")
+            side: "left"
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+        }
+    }
+
+    FocusedScrollMouseArea {
+        id: rightEdgeScroll
+        z: 10
+        visible: root.edgeScrollOptions?.enable ?? true
+        enabled: visible
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        width: root.edgeScrollWidth
+        acceptedButtons: Qt.LeftButton
+
+        onScrollDown: Audio.decrementVolume()
+        onScrollUp: Audio.incrementVolume()
+        onMovedAway: GlobalStates.osdVolumeOpen = false
+        onPressed: mouse => {
+            GlobalStates.sidebarRightOpen = !GlobalStates.sidebarRightOpen
+            mouse.accepted = false
+        }
+
+        ScrollHint {
+            reveal: rightEdgeScroll.hovered
+            icon: "volume_up"
+            tooltipText: Translation.tr("Scroll to change volume")
+            side: "right"
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
         }
     }
 }

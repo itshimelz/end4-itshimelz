@@ -1,9 +1,6 @@
 pragma Singleton
 pragma ComponentBehavior: Bound
 
-// From https://git.outfoxxed.me/outfoxxed/nixnew
-// It does not have a license, but the author is okay with redistribution.
-
 import QtQml.Models
 import QtQuick
 import Quickshell
@@ -18,7 +15,12 @@ Singleton {
 	id: root;
 	property list<MprisPlayer> players: Mpris.players.values.filter(player => isRealPlayer(player));
 	property MprisPlayer trackedPlayer: null;
-	property MprisPlayer activePlayer: trackedPlayer ?? Mpris.players.values[0] ?? null;
+	property MprisPlayer activePlayer: {
+		if (trackedPlayer !== null && players.indexOf(trackedPlayer) !== -1) {
+			return trackedPlayer;
+		}
+		return players[0] ?? null;
+	}
 	signal trackChanged(reverse: bool);
 
 	property bool __reverse: false;
@@ -34,16 +36,23 @@ Singleton {
         }
         return (
             // Remove native browser buses only if plasma-browser-integration is actually active on D-Bus
-            !(hasActivePlasmaIntegration && player.dbusName.startsWith('org.mpris.MediaPlayer2.firefox')) && !(hasActivePlasmaIntegration && player.dbusName.startsWith('org.mpris.MediaPlayer2.chromium')) &&
+            !(hasActivePlasmaIntegration && (
+                player.dbusName.startsWith('org.mpris.MediaPlayer2.firefox') ||
+                player.dbusName.startsWith('org.mpris.MediaPlayer2.chromium') ||
+                player.dbusName.startsWith('org.mpris.MediaPlayer2.google-chrome') ||
+                player.dbusName.startsWith('org.mpris.MediaPlayer2.brave') ||
+                player.dbusName.startsWith('org.mpris.MediaPlayer2.vivaldi') ||
+                player.dbusName.startsWith('org.mpris.MediaPlayer2.opera') ||
+                player.dbusName.startsWith('org.mpris.MediaPlayer2.microsoft-edge')
+            )) &&
             // playerctld just copies other buses and we don't need duplicates
             !player.dbusName?.startsWith('org.mpris.MediaPlayer2.playerctld') &&
             // Non-instance mpd bus
             !(player.dbusName?.endsWith('.mpd') && !player.dbusName.endsWith('MediaPlayer2.mpd')));
     }
 
-	// Original stuff from fox below
 	Instantiator {
-		model: Mpris.players;
+		model: root.players;
 
 		Connections {
 			required property MprisPlayer modelData;
@@ -57,15 +66,15 @@ Singleton {
 
 			Component.onDestruction: {
 				if (root.trackedPlayer == null || !root.trackedPlayer.isPlaying) {
-					for (const player of Mpris.players.values) {
+					for (const player of root.players) {
 						if (player.playbackState.isPlaying) {
 							root.trackedPlayer = player;
 							break;
 						}
 					}
 
-					if (trackedPlayer == null && Mpris.players.values.length != 0) {
-						trackedPlayer = Mpris.players.values[0];
+					if (trackedPlayer == null && root.players.length != 0) {
+						trackedPlayer = root.players[0];
 					}
 				}
 			}
@@ -84,15 +93,10 @@ Singleton {
 		}
 
 		function onTrackArtUrlChanged() {
-			// console.log("arturl:", activePlayer.trackArtUrl)
-			// root.updateTrack();
 			if (root.activePlayer.uniqueId == root.activeTrack.uniqueId && root.activePlayer.trackArtUrl != root.activeTrack.artUrl) {
-				// cantata likes to send cover updates *BEFORE* updating the track info.
-				// as such, art url changes shouldn't be able to break the reverse animation
 				const r = root.__reverse;
 				root.updateTrack();
 				root.__reverse = r;
-
 			}
 		}
 	}
@@ -100,7 +104,6 @@ Singleton {
 	onActivePlayerChanged: this.updateTrack();
 
 	function updateTrack() {
-		//console.log(`update: ${this.activePlayer?.trackTitle ?? ""} : ${this.activePlayer?.trackArtists}`)
 		this.activeTrack = {
 			uniqueId: this.activePlayer?.uniqueId ?? 0,
 			artUrl: this.activePlayer?.trackArtUrl ?? "",
@@ -154,13 +157,11 @@ Singleton {
 	}
 
 	function setActivePlayer(player: MprisPlayer) {
-		const targetPlayer = player ?? Mpris.players[0];
-		console.log(`[Mpris] Active player ${targetPlayer} << ${activePlayer}`)
+		const targetPlayer = player ?? root.players[0];
 
 		if (targetPlayer && this.activePlayer) {
-			this.__reverse = Mpris.players.indexOf(targetPlayer) < Mpris.players.indexOf(this.activePlayer);
+			this.__reverse = root.players.indexOf(targetPlayer) < root.players.indexOf(this.activePlayer);
 		} else {
-			// always animate forward if going to null
 			this.__reverse = false;
 		}
 
@@ -171,7 +172,7 @@ Singleton {
 		target: "mpris"
 
 		function pauseAll(): void {
-			for (const player of Mpris.players.values) {
+			for (const player of root.players) {
 				if (player.canPause) player.pause();
 			}
 		}
