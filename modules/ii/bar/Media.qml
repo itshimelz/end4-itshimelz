@@ -74,17 +74,16 @@ Item {
         onExited: { root.artDownloaded = true }
     }
 
-    visible: Config.options.bar.media.alwaysVisible || (root.hasTrack && root.activePlayer != null)
     Layout.fillHeight: true
-    implicitWidth: (!root.visible) ? 0 : (vertical 
+    implicitWidth: vertical 
         ? Appearance.sizes.verticalBarWidth 
         : (isMaterial 
             ? materialRow.implicitWidth 
             : Math.max(
                 Config.options.bar.media.minWidth,
                 Math.min(rowLayout.implicitWidth + 8, Config.options.bar.media.maxWidth)
-            )))
-    implicitHeight: (!root.visible) ? 0 : (vertical ? (isMaterial ? 32 : mediaCircProg.implicitHeight) : Appearance.sizes.barHeight)
+            ))
+    implicitHeight: vertical ? (isMaterial ? 32 : mediaCircProg.implicitHeight) : Appearance.sizes.barHeight
 
     Timer {
         running: activePlayer?.playbackState == MprisPlaybackState.Playing

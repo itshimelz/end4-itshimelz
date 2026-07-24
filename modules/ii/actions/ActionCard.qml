@@ -4,90 +4,43 @@ import QtQuick.Controls
 import qs.modules.common
 import qs.modules.common.widgets
 
-Rectangle {
+RippleButton {
     id: root
-    property string icon: ""
-    property string title: ""
-    property string buttonIcon: "play_arrow"
-    property string buttonText: "Run"
-    signal clicked()
+    property string buttonIcon: ""
+    property string description: ""
 
-    radius: Appearance.rounding.normal
-    color: Appearance.colors.colLayer1
-    border.width: 0
-    implicitHeight: 90
+    Layout.fillWidth: true
+    implicitHeight: contentItem.implicitHeight + 8
+    font.pixelSize: Appearance.font.pixelSize.small
+    colBackgroundHover: "transparent"
 
-    ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: 14
+    contentItem: RowLayout {
         spacing: 10
-
-        // Title Header with Icon
-        RowLayout {
+        OptionalMaterialSymbol {
+            icon: root.buttonIcon
+            iconSize: Appearance.font.pixelSize.larger
+        }
+        ColumnLayout {
             Layout.fillWidth: true
-            spacing: 8
-
-            MaterialSymbol {
-                text: root.icon
-                iconSize: 18
-                color: Appearance.colors.colSubtext
-                visible: root.icon !== ""
-            }
-
+            spacing: 0
             StyledText {
                 Layout.fillWidth: true
-                text: root.title
-                font.pixelSize: Appearance.font.pixelSize.normal
-                font.bold: true
-                color: Appearance.colors.colOnLayer1
-                elide: Text.ElideRight
+                text: root.text
+                font: root.font
+                color: Appearance.colors.colOnSecondaryContainer
+            }
+            StyledText {
+                Layout.fillWidth: true
+                visible: root.description.length > 0
+                text: root.description
+                font.pixelSize: Appearance.font.pixelSize.smaller
+                color: Appearance.colors.colSubtext
             }
         }
-
-        // Action Pill Button Row
-        RowLayout {
-            Layout.fillWidth: true
-
-            Item { Layout.fillWidth: true }
-
-            Rectangle {
-                implicitHeight: 34
-                implicitWidth: buttonRow.implicitWidth + 24
-                radius: 17
-                color: pillMouseArea.containsMouse ? Appearance.colors.colPrimaryContainerHover : Appearance.colors.colPrimaryContainer
-
-                Behavior on color {
-                    ColorAnimation { duration: 150 }
-                }
-
-                MouseArea {
-                    id: pillMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: root.clicked()
-                }
-
-                RowLayout {
-                    id: buttonRow
-                    anchors.centerIn: parent
-                    spacing: 6
-
-                    MaterialSymbol {
-                        text: root.buttonIcon
-                        iconSize: 16
-                        color: Appearance.colors.colOnPrimaryContainer
-                        visible: root.buttonIcon !== ""
-                    }
-
-                    StyledText {
-                        text: root.buttonText
-                        font.pixelSize: Appearance.font.pixelSize.small
-                        font.bold: true
-                        color: Appearance.colors.colOnPrimaryContainer
-                    }
-                }
-            }
+        MaterialSymbol {
+            text: "play_arrow"
+            iconSize: Appearance.font.pixelSize.larger
+            color: Appearance.colors.colPrimary
         }
     }
 }

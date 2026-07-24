@@ -75,7 +75,7 @@ Scope {
             id: actionsWindow
             anchors.centerIn: parent
             width: Math.min(parent.width - 80, 720)
-            height: Math.min(parent.height - 80, 440)
+            height: Math.min(parent.height - 80, 520)
             color: Appearance.colors.colLayer0
             border.width: 1
             border.color: Appearance.colors.colLayer0Border
@@ -98,145 +98,103 @@ Scope {
                 }
             }
 
-            ColumnLayout {
+            ContentPage {
                 anchors.fill: parent
-                anchors.margins: 24
-                spacing: 16
+                baseWidth: 620
+                forceWidth: true
+                bottomContentPadding: 35
 
-                // Section Title (Matches settings design)
-                RowLayout {
+                ColumnLayout {
                     Layout.fillWidth: true
-                    spacing: 10
+                    spacing: 16
 
-                    Rectangle {
-                        implicitWidth: 32
-                        implicitHeight: 32
-                        radius: 8
-                        color: Appearance.colors.colPrimaryContainer
-
-                        MaterialSymbol {
-                            anchors.centerIn: parent
-                            text: "bolt"
-                            iconSize: 20
-                            color: Appearance.colors.colOnPrimaryContainer
-                        }
-                    }
-
-                    StyledText {
-                        text: Translation.tr("System Actions & Maintenance")
-                        font.pixelSize: Appearance.font.pixelSize.large
-                        font.bold: true
-                        color: Appearance.colors.colOnLayer0
-                    }
-
-                    Item { Layout.fillWidth: true }
-
-                    Rectangle {
-                        implicitWidth: 32
-                        implicitHeight: 32
-                        radius: 16
-                        color: closeMouseArea.containsMouse ? Appearance.colors.colLayer1Hover : "transparent"
-
-                        MouseArea {
-                            id: closeMouseArea
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: panelWindow.hide()
-                        }
-
-                        MaterialSymbol {
-                            anchors.centerIn: parent
-                            text: "close"
-                            iconSize: 18
-                            color: Appearance.colors.colSubtext
-                        }
-                    }
-                }
-
-                // Grid of 2-column cards
-                GridLayout {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    columns: 2
-                    rowSpacing: 14
-                    columnSpacing: 14
-
-                    // Action 1: Clear Clipboard
-                    ActionCard {
+                    ContentSection {
+                        icon: "content_paste_go"
+                        title: Translation.tr("Clipboard & Cache")
+                        shape: MaterialShape.Shape.Puffy
                         Layout.fillWidth: true
-                        icon: "delete_sweep"
-                        title: Translation.tr("Clipboard History")
-                        buttonIcon: "delete"
-                        buttonText: Translation.tr("Clear All")
-                        onClicked: {
-                            Quickshell.execDetached(["bash", "-c", "cliphist wipe && qs -c $qsConfig ipc call cliphistService update; notify-send 'Clipboard Cleared' 'All clipboard history entries have been deleted.' -a 'System Actions'"]);
-                            panelWindow.hide();
+
+                        ContentSubsection {
+                            GroupedList {
+                                ActionCard {
+                                    buttonIcon: "delete_sweep"
+                                    text: Translation.tr("Clear clipboard history")
+                                    description: Translation.tr("Wipe all clipboard entries and sync")
+                                    onClicked: {
+                                        Quickshell.execDetached(["bash", "-c", "cliphist wipe && qs -c $qsConfig ipc call cliphistService update; notify-send 'Clipboard Cleared' 'All clipboard history entries have been deleted.' -a 'System Actions'"]);
+                                        panelWindow.hide();
+                                    }
+                                }
+                                ActionCard {
+                                    buttonIcon: "cleaning_services"
+                                    text: Translation.tr("Clear temporary cache")
+                                    description: Translation.tr("Remove thumbnail and app cache files")
+                                    onClicked: {
+                                        Quickshell.execDetached(["bash", "-c", "rm -rf ~/.cache/thumbnails/* ~/.cache/tmp/*; notify-send 'Cache Cleared' 'Temporary thumbnail and application cache cleared.' -a 'System Actions'"]);
+                                        panelWindow.hide();
+                                    }
+                                }
+                            }
                         }
                     }
 
-                    // Action 2: Restart XDG Portals
-                    ActionCard {
-                        Layout.fillWidth: true
+                    ContentSection {
                         icon: "restart_alt"
-                        title: Translation.tr("XDG Desktop Portals")
-                        buttonIcon: "refresh"
-                        buttonText: Translation.tr("Restart")
-                        onClicked: {
-                            Quickshell.execDetached(["bash", "-c", "systemctl --user restart xdg-desktop-portal-hyprland xdg-desktop-portal; notify-send 'XDG Portals Restarted' 'Hyprland and GTK desktop portals restarted.' -a 'System Actions'"]);
-                            panelWindow.hide();
+                        title: Translation.tr("Services & Portals")
+                        shape: MaterialShape.Shape.Clover4Leaf
+                        Layout.fillWidth: true
+
+                        ContentSubsection {
+                            GroupedList {
+                                ActionCard {
+                                    buttonIcon: "sync"
+                                    text: Translation.tr("Restart XDG desktop portals")
+                                    description: Translation.tr("Fix file dialogs and screen sharing")
+                                    onClicked: {
+                                        Quickshell.execDetached(["bash", "-c", "systemctl --user restart xdg-desktop-portal-hyprland xdg-desktop-portal; notify-send 'XDG Portals Restarted' 'Hyprland and GTK desktop portals restarted.' -a 'System Actions'"]);
+                                        panelWindow.hide();
+                                    }
+                                }
+                                ActionCard {
+                                    buttonIcon: "tune"
+                                    text: Translation.tr("Reload Hyprland config")
+                                    description: Translation.tr("Re-apply compositor settings without restart")
+                                    onClicked: {
+                                        Quickshell.execDetached(["bash", "-c", "hyprctl reload; notify-send 'Hyprland Reloaded' 'Hyprland compositor configuration reloaded.' -a 'System Actions'"]);
+                                        panelWindow.hide();
+                                    }
+                                }
+                            }
                         }
                     }
 
-                    // Action 3: Reload Hyprland
-                    ActionCard {
-                        Layout.fillWidth: true
-                        icon: "tune"
-                        title: Translation.tr("Hyprland Compositor")
-                        buttonIcon: "sync"
-                        buttonText: Translation.tr("Reload Config")
-                        onClicked: {
-                            Quickshell.execDetached(["bash", "-c", "hyprctl reload; notify-send 'Hyprland Reloaded' 'Hyprland compositor configuration reloaded.' -a 'System Actions'"]);
-                            panelWindow.hide();
-                        }
-                    }
-
-                    // Action 4: Restart Shell
-                    ActionCard {
-                        Layout.fillWidth: true
-                        icon: "desktop_windows"
-                        title: Translation.tr("Quickshell Desktop UI")
-                        buttonIcon: "power_settings_new"
-                        buttonText: Translation.tr("Restart Shell")
-                        onClicked: {
-                            Quickshell.execDetached(["bash", "-c", "notify-send 'Quickshell Restarted' 'Quickshell desktop UI reloaded successfully.' -a 'System Actions'; killall qs; qs -c $qsConfig &"]);
-                            panelWindow.hide();
-                        }
-                    }
-
-                    // Action 5: Re-sync Wallpaper & SDDM
-                    ActionCard {
-                        Layout.fillWidth: true
+                    ContentSection {
                         icon: "palette"
-                        title: Translation.tr("SDDM & Theme Colors")
-                        buttonIcon: "brush"
-                        buttonText: Translation.tr("Re-sync")
-                        onClicked: {
-                            Quickshell.execDetached(["bash", "-c", "WALL=$(cat ~/.local/state/quickshell/user/generated/wallpaper/path.txt 2>/dev/null); [ -f \"$WALL\" ] && matugen image --source-color-index 0 \"$WALL\"; notify-send 'SDDM & Colors Synced' 'Material You theme colors and SDDM login background updated.' -a 'System Actions'"]);
-                            panelWindow.hide();
-                        }
-                    }
-
-                    // Action 6: Clear Cache
-                    ActionCard {
+                        title: Translation.tr("Shell & Appearance")
+                        shape: MaterialShape.Shape.Cookie4Sided
                         Layout.fillWidth: true
-                        icon: "cleaning_services"
-                        title: Translation.tr("Temporary User Cache")
-                        buttonIcon: "auto_delete"
-                        buttonText: Translation.tr("Clean Cache")
-                        onClicked: {
-                            Quickshell.execDetached(["bash", "-c", "rm -rf ~/.cache/thumbnails/* ~/.cache/tmp/*; notify-send 'Cache Cleared' 'Temporary thumbnail and application cache cleared.' -a 'System Actions'"]);
-                            panelWindow.hide();
+
+                        ContentSubsection {
+                            GroupedList {
+                                ActionCard {
+                                    buttonIcon: "desktop_windows"
+                                    text: Translation.tr("Restart Quickshell UI")
+                                    description: Translation.tr("Kill and relaunch the desktop shell")
+                                    onClicked: {
+                                        Quickshell.execDetached(["bash", "-c", "notify-send 'Quickshell Restarted' 'Quickshell desktop UI reloaded successfully.' -a 'System Actions'; killall qs; qs -c $qsConfig &"]);
+                                        panelWindow.hide();
+                                    }
+                                }
+                                ActionCard {
+                                    buttonIcon: "brush"
+                                    text: Translation.tr("Re-sync SDDM & theme colors")
+                                    description: Translation.tr("Update login screen wallpaper and Material You colors")
+                                    onClicked: {
+                                        Quickshell.execDetached(["bash", "-c", "WALL=$(cat ~/.local/state/quickshell/user/generated/wallpaper/path.txt 2>/dev/null); [ -f \"$WALL\" ] && matugen image --source-color-index 0 \"$WALL\"; notify-send 'SDDM & Colors Synced' 'Material You theme colors and SDDM login background updated.' -a 'System Actions'"]);
+                                        panelWindow.hide();
+                                    }
+                                }
+                            }
                         }
                     }
                 }
