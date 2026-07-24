@@ -75,7 +75,7 @@ Scope {
             id: actionsWindow
             anchors.centerIn: parent
             width: Math.min(parent.width - 80, 720)
-            height: Math.min(parent.height - 80, 520)
+            height: Math.min(parent.height - 80, 640)
             color: Appearance.colors.colLayer0
             border.width: 1
             border.color: Appearance.colors.colLayer0Border
@@ -164,6 +164,24 @@ Scope {
                                         panelWindow.hide();
                                     }
                                 }
+                                ActionCard {
+                                    buttonIcon: "volume_up"
+                                    text: Translation.tr("Restart PipeWire audio")
+                                    description: Translation.tr("Fix audio glitches or missing sound output")
+                                    onClicked: {
+                                        Quickshell.execDetached(["bash", "-c", "systemctl --user restart pipewire pipewire-pulse wireplumber; notify-send 'PipeWire Restarted' 'Audio service and session manager restarted.' -a 'System Actions'"]);
+                                        panelWindow.hide();
+                                    }
+                                }
+                                ActionCard {
+                                    buttonIcon: "wifi"
+                                    text: Translation.tr("Restart NetworkManager")
+                                    description: Translation.tr("Fix WiFi or network connectivity issues")
+                                    onClicked: {
+                                        Quickshell.execDetached(["bash", "-c", "sudo systemctl restart NetworkManager; notify-send 'NetworkManager Restarted' 'Network service restarted. Reconnecting...' -a 'System Actions'"]);
+                                        panelWindow.hide();
+                                    }
+                                }
                             }
                         }
                     }
@@ -192,6 +210,72 @@ Scope {
                                     onClicked: {
                                         Quickshell.execDetached(["bash", "-c", "WALL=$(cat ~/.local/state/quickshell/user/generated/wallpaper/path.txt 2>/dev/null); [ -f \"$WALL\" ] && matugen image --source-color-index 0 \"$WALL\"; notify-send 'SDDM & Colors Synced' 'Material You theme colors and SDDM login background updated.' -a 'System Actions'"]);
                                         panelWindow.hide();
+                                    }
+                                }
+                                ActionCard {
+                                    buttonIcon: "animation"
+                                    text: Translation.tr("Toggle Hyprland animations")
+                                    description: Translation.tr("Enable or disable compositor animations on the fly")
+                                    onClicked: {
+                                        Quickshell.execDetached(["bash", "-c", "STATE=$(hyprctl getoption animations:enabled -j | grep -o '\"int\": [01]' | grep -o '[01]'); if [ \"$STATE\" = \"1\" ]; then hyprctl keyword animations:enabled false; notify-send 'Animations Disabled' 'Hyprland compositor animations turned off.' -a 'System Actions'; else hyprctl keyword animations:enabled true; notify-send 'Animations Enabled' 'Hyprland compositor animations turned on.' -a 'System Actions'; fi"]);
+                                        panelWindow.hide();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    ContentSection {
+                        icon: "monitor"
+                        title: Translation.tr("System")
+                        shape: MaterialShape.Shape.ClamShell
+                        Layout.fillWidth: true
+
+                        ContentSubsection {
+                            GroupedList {
+                                ActionCard {
+                                    buttonIcon: "screenshot_region"
+                                    text: Translation.tr("Screenshot region")
+                                    description: Translation.tr("Select and capture a region of the screen")
+                                    onClicked: {
+                                        panelWindow.hide();
+                                        Quickshell.execDetached(["qs", "-p", Quickshell.shellPath(""), "ipc", "call", "region", "screenshot"]);
+                                    }
+                                }
+                                ActionCard {
+                                    buttonIcon: "screen_record"
+                                    text: Translation.tr("Toggle screen recording")
+                                    description: Translation.tr("Start or stop wf-recorder screen capture")
+                                    onClicked: {
+                                        Quickshell.execDetached(["bash", "-c", "if pidof wf-recorder > /dev/null; then killall -s SIGINT wf-recorder; notify-send 'Recording Stopped' 'Screen recording saved.' -a 'System Actions'; else wf-recorder -g \"$(slurp)\" -f ~/Videos/recording-$(date +%Y-%m-%d_%H.%M.%S).mp4 & notify-send 'Recording Started' 'Select a region. Recording to ~/Videos/' -a 'System Actions'; fi"]);
+                                        panelWindow.hide();
+                                    }
+                                }
+                                ActionCard {
+                                    buttonIcon: "close"
+                                    text: Translation.tr("Kill frozen window")
+                                    description: Translation.tr("Click any window to force close it")
+                                    onClicked: {
+                                        panelWindow.hide();
+                                        Quickshell.execDetached(["hyprctl", "kill"]);
+                                    }
+                                }
+                                ActionCard {
+                                    buttonIcon: "lock"
+                                    text: Translation.tr("Lock screen")
+                                    description: Translation.tr("Lock the session with Hyprlock")
+                                    onClicked: {
+                                        panelWindow.hide();
+                                        Quickshell.execDetached(["hyprlock"]);
+                                    }
+                                }
+                                ActionCard {
+                                    buttonIcon: "logout"
+                                    text: Translation.tr("Logout session")
+                                    description: Translation.tr("End the current Hyprland session")
+                                    onClicked: {
+                                        panelWindow.hide();
+                                        Quickshell.execDetached(["hyprctl", "dispatch", "exit"]);
                                     }
                                 }
                             }
