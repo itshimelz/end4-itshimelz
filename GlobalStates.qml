@@ -16,6 +16,7 @@ Singleton {
     property bool mediaControlsOpen: false
     property bool osdBrightnessOpen: false
     property bool settingsOpen: false
+    property bool quickActionsOpen: false
     property bool osdVolumeOpen: false
     property bool oskOpen: false
     property bool overlayOpen: false

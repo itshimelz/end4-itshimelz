@@ -24,6 +24,7 @@ import qs.modules.ii.overlay
 import qs.modules.ii.verticalBar
 import qs.modules.ii.wallpaperSelector
 import qs.modules.ii.desktopMenu
+import qs.modules.ii.actions
 import qs.modules.ii.dropover
 
 Scope {
@@ -50,4 +51,5 @@ Scope {
     PanelLoader { component: Settings {} }
     PanelLoader { component: DesktopMenu {} }
     PanelLoader { component: DropShelfPanel {} }
+    PanelLoader { component: QuickActions {} }
 }

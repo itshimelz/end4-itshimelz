@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Services.UPower
 import Quickshell.Hyprland
 import Quickshell.Services.SystemTray
+import Quickshell.Services.Mpris
 import qs
 import qs.services
 import qs.modules.common
@@ -20,10 +21,24 @@ Item {
     readonly property real centerPillWidth: centerPill.width
 
     readonly property bool trayHasItems: SystemTray.items.values.length > 0
+    readonly property MprisPlayer activePlayer: {
+        const preferred = Config.options.bar.media.preferredPlayer.trim().toLowerCase()
+        if (preferred.length === 0) return MprisController.activePlayer
+        const _ = MprisController.players.count
+        for (const p of MprisController.players) {
+            if ((p.identity ?? "").toLowerCase().includes(preferred) ||
+                (p.desktopEntry ?? "").toLowerCase().includes(preferred))
+                return p
+        }
+        return MprisController.activePlayer
+    }
+    readonly property bool hasMediaTrack: (activePlayer?.trackTitle ?? "").length > 0
 
     function filterLayout(layout) {
-        if (trayHasItems) return layout
-        return layout.filter(name => name !== "sysTray")
+        let res = layout
+        if (!trayHasItems) res = res.filter(name => name !== "sysTray")
+        if (!Config.options.bar.media.alwaysVisible && !hasMediaTrack) res = res.filter(name => name !== "media")
+        return res
     }
 
     readonly property var effectiveLeftLayout:   filterLayout(Config.options.bar.layouts.leftLayout)
