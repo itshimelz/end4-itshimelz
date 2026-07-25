@@ -83,6 +83,12 @@ Singleton {
         }
     }
 
+    function seekToTime(seconds) {
+        if (root.activePlayer && root.activePlayer.canSeek) {
+            root.activePlayer.position = seconds
+        }
+    }
+
     function restartLyrics() {
         lyricsProc.running = false
         root.lyricsLines = []
@@ -94,7 +100,7 @@ Singleton {
         const artist   = root.activePlayer?.trackArtist ?? ""
         const duration = root.activePlayer?.length       ?? 0
 
-        if (!title || !artist) { root.status = "no_info"; return }
+        if (!title) { root.status = "no_info"; return }
 
         lyricsProc.command = [
             "python3",
@@ -104,9 +110,17 @@ Singleton {
         lyricsProc.running = true
     }
 
+    onActivePlayerChanged: root.restartLyrics()
+
+    Connections {
+        target: MprisController
+        function onTrackChanged() { root.restartLyrics() }
+    }
+
     Connections {
         target: root.activePlayer
         function onTrackTitleChanged() { root.restartLyrics() }
+        function onTrackArtistChanged() { root.restartLyrics() }
     }
 
     Component.onCompleted: root.restartLyrics()

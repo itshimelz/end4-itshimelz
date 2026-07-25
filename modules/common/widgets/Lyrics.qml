@@ -16,61 +16,148 @@ Item {
     property color indicatorShapeColor: Appearance.colors.colOnPrimaryContainer
     property int textAlignment: Text.AlignLeft
 
+    property bool isUserInteracting: false
+
     implicitWidth: 200
     implicitHeight: 200
+    clip: true
 
-    ColumnLayout {
+    Timer {
+        id: autoResyncTimer
+        interval: 4000
+        repeat: false
+        onTriggered: {
+            root.isUserInteracting = false
+            lyricsListView.scrollToActive()
+        }
+    }
+
+    Item {
         anchors.fill: parent
-        spacing: 4
+        visible: LyricsService.status !== "ok"
 
-        Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            visible: LyricsService.status !== "ok"
+        ColumnLayout {
+            anchors.centerIn: parent
+            spacing: 12
 
-            ColumnLayout {
-                anchors.centerIn: parent
-                spacing: 12
+            MaterialLoadingIndicator {
+                Layout.alignment: Qt.AlignHCenter
+                loading: LyricsService.status === "loading"
+                colBg: root.indicatorColor
+                colShape: root.indicatorShapeColor
+                implicitSize: 48
+            }
+        }
+    }
 
-                MaterialLoadingIndicator {
-                    Layout.alignment: Qt.AlignHCenter
-                    loading: LyricsService.status === "loading"
-                    colBg: root.indicatorColor
-                    colShape: root.indicatorShapeColor
-                    implicitSize: 48
+    onVisibleChanged: {
+        if (root.visible) {
+            root.isUserInteracting = false
+            lyricsListView.scrollToActive()
+        }
+    }
+
+    ListView {
+        id: lyricsListView
+        anchors.fill: parent
+        visible: LyricsService.status === "ok"
+        model: LyricsService.lyricsLines
+        spacing: 6
+        clip: true
+
+        highlightMoveDuration: 300
+
+        function scrollToActive() {
+            if (LyricsService.activeIndex >= 0 && LyricsService.activeIndex < lyricsListView.count) {
+                lyricsListView.currentIndex = LyricsService.activeIndex
+                lyricsListView.positionViewAtIndex(LyricsService.activeIndex, ListView.Center)
+            }
+        }
+
+        Connections {
+            target: LyricsService
+            function onActiveIndexChanged() {
+                if (!root.isUserInteracting) {
+                    lyricsListView.scrollToActive()
+                }
+            }
+            function onStatusChanged() {
+                if (LyricsService.status === "ok") {
+                    root.isUserInteracting = false
+                    lyricsListView.scrollToActive()
                 }
             }
         }
 
-        ColumnLayout {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            visible: LyricsService.status === "ok"
-            spacing: 6
+        onMovementStarted: {
+            root.isUserInteracting = true
+            autoResyncTimer.restart()
+        }
 
-            Repeater {
-                model: 7
-                delegate: StyledText {
-                    id: lyricSlot
-                    required property int index
+        onFlickEnded: {
+            autoResyncTimer.restart()
+        }
+
+        delegate: Item {
+            id: lineDelegate
+            required property int index
+            required property var modelData
+
+            width: lyricsListView.width
+            implicitHeight: lineContent.implicitHeight + 4
+
+            readonly property bool isActive: index === LyricsService.activeIndex
+            readonly property int dist: Math.abs(index - LyricsService.activeIndex)
+
+            RowLayout {
+                id: lineContent
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 6
+
+                TextEdit {
+                    id: lyricText
                     Layout.fillWidth: true
-                    horizontalAlignment: root.textAlignment
+                    readOnly: true
+                    selectByMouse: true
+                    activeFocusOnPress: false
                     wrapMode: Text.WordWrap
-                    text: LyricsService.slots[index] ?? ""
-                    readonly property int dist: Math.abs(index - LyricsService.before)
+                    text: lineDelegate.modelData.text || "♪"
+                    font.family: Appearance.font.family
                     font.pixelSize: {
-                        if (dist === 0) return Appearance.font.pixelSize.normal
-                        if (dist === 1) return Appearance.font.pixelSize.small
+                        if (lineDelegate.isActive) return Appearance.font.pixelSize.normal
+                        if (lineDelegate.dist === 1) return Appearance.font.pixelSize.small
                         return Appearance.font.pixelSize.smaller
                     }
+                    font.weight: lineDelegate.isActive ? Font.Bold : Font.Normal
+                    color: lineDelegate.isActive ? (root.activeColor !== "white" ? root.activeColor : Appearance.colors.colPrimary) : root.textColor
+                    selectionColor: Appearance.colors.colPrimaryContainer
+                    selectedTextColor: Appearance.colors.colOnPrimaryContainer
+
                     opacity: {
-                        if (dist === 0) return 1.0
-                        if (dist === 1) return 0.6
-                        if (dist === 2) return 0.35
-                        return 0.15
+                        if (lineDelegate.isActive) return 1.0
+                        if (lineDelegate.dist === 1) return 0.70
+                        if (lineDelegate.dist === 2) return 0.45
+                        return 0.25
                     }
-                    color: dist === 0 ? root.activeColor : root.textColor
+
                     Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
+                    Behavior on color { ColorAnimation { duration: 200 } }
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                propagateComposedEvents: true
+                onClicked: (mouse) => {
+                    if (lyricText.selectedText.length === 0) {
+                        LyricsService.seekToTime(lineDelegate.modelData.time)
+                        root.isUserInteracting = true
+                        autoResyncTimer.restart()
+                    } else {
+                        mouse.accepted = false
+                    }
                 }
             }
         }

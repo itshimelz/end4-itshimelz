@@ -52,8 +52,8 @@ Item {
 
             Rectangle {
                 id: artBackground
-                implicitHeight: 150
-                implicitWidth: 150
+                implicitHeight: 120
+                implicitWidth: 120
                 radius: 16
                 color: ColorUtils.transparentize(root.blendedColors.colLayer1, 0.5)
 
@@ -85,6 +85,7 @@ Item {
                 id: lyricsComp
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                clip: true
                 textColor: root.blendedColors.colOnLayer0
                 activeColor: root.blendedColors.colPrimary
                 dimColor: root.blendedColors.colSubtext
@@ -108,6 +109,7 @@ Item {
             StyledText {
                 id: trackTitle
                 Layout.fillWidth: true
+                Layout.rightMargin: playPauseButton.implicitWidth + 12
                 font.pixelSize: Appearance.font.pixelSize.large
                 color: root.blendedColors.colOnLayer0
                 elide: Text.ElideRight
@@ -120,6 +122,7 @@ Item {
             StyledText {
                 id: trackArtist
                 Layout.fillWidth: true
+                Layout.rightMargin: playPauseButton.implicitWidth + 12
                 Layout.topMargin: -6
                 font.pixelSize: Appearance.font.pixelSize.smaller
                 color: root.blendedColors.colSubtext
