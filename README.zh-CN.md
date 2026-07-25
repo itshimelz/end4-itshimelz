@@ -4,24 +4,12 @@
 
 <div align="center">
 
-# 💠 end4-pC
+# 💠 end4-itshimelz
 
-**[illogical-impulse](https://github.com/end-4/dots-hyprland)（作者：[@end-4](https://github.com/end-4)）的个人分支**
-由 **pctrade** 定制并维护
+**基于 [@end-4](https://github.com/end-4) 开发的 [illogical-impulse](https://github.com/end-4/dots-hyprland) 的个人定制分支**  
+由 **[@end-4](https://github.com/end-4)** 原创开发 • **[@itshimelz](https://github.com/itshimelz)** 定制与维护
 
 [English](README.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
-
-</div>
-
----
-
-## 🎬 展示
-
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=o0Vsh7eVchs">
-    <img src="https://img.youtube.com/vi/o0Vsh7eVchs/maxresdefault.jpg" alt="Material 3 Expressive x Linux" width="85%" style="border-radius: 12px; box-shadow: 0px 10px 30px rgba(0,0,0,0.5);"/>
-  </a>
-</p>
 
 </div>
 
@@ -88,18 +76,21 @@ hl.bind("SUPER + escape", hl.dsp.global("quickshell:settingsToggle"), {descripti
 
 > **注意：** 设置是一个覆盖面板，而不是普通窗口，因此 `Super + Q` 无法将其关闭。请使用同一个快捷键进行切换，或按 `Escape`。
 
-## 🙏 致谢
+## 🙏 上游致谢与 Credit
 
-衷心感谢促成此项目的人们：
+本项目是基于 **[@end-4](https://github.com/end-4)** 创作的 **[illogical-impulse](https://github.com/end-4/dots-hyprland)** 的定制分支。
 
-- **[@end-4](https://github.com/end-4)** — 创建了原始的 [dots-hyprland](https://github.com/end-4/dots-hyprland) / illogical-impulse shell。这个 dotfiles 项目堪称杰作 🫡
+衷心感谢原作者及相关贡献者：
+
+- **[@end-4](https://github.com/end-4)** — 原始项目 **[illogical-impulse / dots-hyprland](https://github.com/end-4/dots-hyprland)** 的创作者。非常出色的 Linux Hyprland 桌面 Shell 与 dotfiles 生态 🫡
+- **[@itshimelz](https://github.com/itshimelz)** — 分支定制、PipeWire 音频输出切换、MPRIS 播放器同步、快捷键指南及后续维护 🚀
 - **[@gh0stzk](https://github.com/gh0stzk)** — 提供了天气 API 集成，让天气小组件得以实现 🙌
-- **[@StarS2112](https://github.com/StarS2112)** — 展示了此分支 🙌
+- **[@StarS2112](https://github.com/StarS2112)** — 社区与展示支持 🙌
 
 ---
 
 <div align="center">
 
-用 ❤️ 制作——欢迎自由分支并打造属于你自己的版本
+基于 **[@end-4](https://github.com/end-4)** 的 **[illogical-impulse](https://github.com/end-4/dots-hyprland)** • 由 **[@itshimelz](https://github.com/itshimelz)** 用 ❤️ 定制
 
 </div>

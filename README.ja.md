@@ -4,24 +4,12 @@
 
 <div align="center">
 
-# 💠 end4-pC
+# 💠 end4-itshimelz
 
-**[illogical-impulse](https://github.com/end-4/dots-hyprland)（作者：[@end-4](https://github.com/end-4)）の個人フォーク**
-**pctrade** がカスタマイズおよびメンテナンス
+**[@end-4](https://github.com/end-4) 氏による [illogical-impulse](https://github.com/end-4/dots-hyprland) のカスタマイズフォーク**  
+**[@end-4](https://github.com/end-4)** 氏が開発 • **[@itshimelz](https://github.com/itshimelz)** がカスタマイズおよびメンテナンス
 
 [English](README.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
-
-</div>
-
----
-
-## 🎬 紹介動画
-
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=o0Vsh7eVchs">
-    <img src="https://img.youtube.com/vi/o0Vsh7eVchs/maxresdefault.jpg" alt="Material 3 Expressive x Linux" width="85%" style="border-radius: 12px; box-shadow: 0px 10px 30px rgba(0,0,0,0.5);"/>
-  </a>
-</p>
 
 </div>
 
@@ -88,18 +76,21 @@ hl.bind("SUPER + escape", hl.dsp.global("quickshell:settingsToggle"), {descripti
 
 > **注意：** 設定は通常のウィンドウではなくオーバーレイパネルであるため、`Super + Q` では閉じられません。同じキーバインドで切り替えるか、`Escape` を押してください。
 
-## 🙏 クレジット
+## 🙏 アップストリーム＆クレジット
 
-このプロジェクトを実現してくださった皆さまに心から感謝します。
+このプロジェクトは、**[@end-4](https://github.com/end-4)** 氏によって作成された **[illogical-impulse](https://github.com/end-4/dots-hyprland)** のカスタマイズフォークです。
 
-- **[@end-4](https://github.com/end-4)** — オリジナルの [dots-hyprland](https://github.com/end-4/dots-hyprland) / illogical-impulse シェルを作成。この dotfiles プロジェクトはまさに傑作です 🫡
+オリジナルの作者および貢献者の皆さまに心から感謝いたします。
+
+- **[@end-4](https://github.com/end-4)** — **[illogical-impulse / dots-hyprland](https://github.com/end-4/dots-hyprland)** のオリジナル作者。素晴らしい Hyprland デスクトップシェル＆dotfiles プロジェクトです 🫡
+- **[@itshimelz](https://github.com/itshimelz)** — カスタマイズ、PipeWire オーディオ出力切替、MPRIS プレイヤー同期、キーバインドガイド、およびメンテナンス 🚀
 - **[@gh0stzk](https://github.com/gh0stzk)** — 天気ウィジェットの実現に必要な天気 API 連携を提供 🙌
-- **[@StarS2112](https://github.com/StarS2112)** — このフォークを紹介 🙌
+- **[@StarS2112](https://github.com/StarS2112)** — コミュニティおよび紹介のサポート 🙌
 
 ---
 
 <div align="center">
 
-❤️ を込めて制作 — 自由にフォークして、自分だけのものを作ってください
+**[@end-4](https://github.com/end-4)** 氏の **[illogical-impulse](https://github.com/end-4/dots-hyprland)** をベースに制作 • **[@itshimelz](https://github.com/itshimelz)** が ❤️ を込めてカスタマイズ
 
 </div>

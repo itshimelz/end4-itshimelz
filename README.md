@@ -12,16 +12,6 @@ Created by **[@end-4](https://github.com/end-4)** • Customized & Maintained by
 
 ---
 
-## 🎬 Showcase
-
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=o0Vsh7eVchs">
-    <img src="https://img.youtube.com/vi/o0Vsh7eVchs/maxresdefault.jpg" alt="Material 3 Expressive x Linux" width="85%" style="border-radius: 12px; box-shadow: 0px 10px 30px rgba(0,0,0,0.5);"/>
-  </a>
-</p>
-
----
-
 ## 📸 Screenshots
 <div align="center">
 
@@ -83,11 +73,13 @@ hl.env("qsConfig", "end4-itshimelz")
 
 ---
 
-## 🙏 Credits & Acknowledgments
+## 🙏 Upstream & Credits
 
-Huge thanks to the original creators and contributors who made this project possible:
+This project is a customized fork of **[illogical-impulse](https://github.com/end-4/dots-hyprland)**, created by **[@end-4](https://github.com/end-4)**.
 
-- **[@end-4](https://github.com/end-4)** — Original author & creator of [dots-hyprland](https://github.com/end-4/dots-hyprland) / illogical-impulse shell. An absolute masterpiece of a Linux dotfiles project 🫡
+Huge thanks to the original author and all contributors who made this project possible:
+
+- **[@end-4](https://github.com/end-4)** — Original author & creator of **[illogical-impulse / dots-hyprland](https://github.com/end-4/dots-hyprland)**. An outstanding Hyprland desktop shell & dotfiles ecosystem 🫡
 - **[@itshimelz](https://github.com/itshimelz)** — Customization, PipeWire audio port switcher, instant MPRIS player sync, responsive keybind cheatsheet, and maintenance 🚀
 - **[@gh0stzk](https://github.com/gh0stzk)** — Weather API integration that powers the weather widget 🙌
 - **[@StarS2112](https://github.com/StarS2112)** — Showcase and community support 🙌
@@ -96,6 +88,6 @@ Huge thanks to the original creators and contributors who made this project poss
 
 <div align="center">
 
-Made with ❤️ by **itshimelz** — based on work by **end-4**
+Based on **[illogical-impulse](https://github.com/end-4/dots-hyprland)** by **[@end-4](https://github.com/end-4)** • Customized with ❤️ by **[@itshimelz](https://github.com/itshimelz)**
 
 </div>

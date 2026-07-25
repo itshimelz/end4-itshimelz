@@ -36,7 +36,6 @@ Item {
 
     function filterLayout(layout) {
         let res = layout
-        if (!trayHasItems) res = res.filter(name => name !== "sysTray")
         if (!Config.options.bar.media.alwaysVisible && !hasMediaTrack) res = res.filter(name => name !== "media")
         return res
     }
