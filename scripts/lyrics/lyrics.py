@@ -5,6 +5,65 @@ import urllib.parse
 import json
 import re
 
+def _romanize_non_bengali(text: str) -> str:
+    if not any('\u0900' <= c <= '\u097F' for c in text):
+        return text
+
+    vowels = {
+        'अ':'a', 'आ':'aa', 'इ':'i', 'ई':'ee', 'उ':'u', 'ऊ':'oo', 'ऋ':'ri',
+        'ए':'e', 'ऐ':'ai', 'ओ':'o', 'औ':'au', 'अं':'an', 'अः':'ah'
+    }
+    matras = {
+        'ा':'aa', 'ि':'i', 'ी':'ee', 'ु':'u', 'ू':'oo', 'ृ':'ri',
+        'े':'e', 'ै':'ai', 'ो':'o', 'ौ':'au', 'ं':'n', 'ः':'h', 'ँ':'n', '्':''
+    }
+    consonants = {
+        'क':'k', 'ख':'kh', 'ग':'g', 'घ':'gh', 'ङ':'ng',
+        'च':'ch', 'छ':'chh', 'ज':'j', 'झ':'jh', 'ञ':'ny',
+        'ट':'t', 'ठ':'th', 'ड':'d', 'ढ':'dh', 'ण':'n',
+        'त':'t', 'थ':'th', 'द':'d', 'ध':'dh', 'न':'n',
+        'प':'p', 'फ':'ph', 'ब':'b', 'भ':'bh', 'म':'m',
+        'य':'y', 'र':'r', 'ल':'l', 'व':'v', 'श':'sh',
+        'ष':'sh', 'स':'s', 'ह':'h', 'ड़':'d', 'ढ़':'dh', 'फ़':'f', 'ज़':'z', 'ख़':'kh', 'ग़':'g'
+    }
+
+    res = []
+    i = 0
+    n = len(text)
+    while i < n:
+        char = text[i]
+        if '\u0980' <= char <= '\u09FF':
+            res.append(char)
+            i += 1
+            continue
+        
+        if char in consonants:
+            base = consonants[char]
+            next_c = text[i+1] if i + 1 < n else ''
+            if next_c in matras:
+                if next_c == '्':
+                    res.append(base)
+                else:
+                    res.append(base + matras[next_c])
+                i += 2
+            else:
+                if i + 1 < n and text[i+1] not in (' ', '\n', '\t', ',', '.', '/', '!', '?', '|', '-'):
+                    res.append(base + 'a')
+                else:
+                    res.append(base)
+                i += 1
+        elif char in vowels:
+            res.append(vowels[char])
+            i += 1
+        elif char in matras:
+            res.append(matras[char])
+            i += 1
+        else:
+            res.append(char)
+            i += 1
+            
+    return ''.join(res)
+
 def _parse_lrc(lrc_text: str) -> list:
     lines = []
     for raw in lrc_text.splitlines():
@@ -17,7 +76,7 @@ def _parse_lrc(lrc_text: str) -> list:
             text = raw[tag_end + 1:].strip()
             mins, secs = time_str.split(":")
             timestamp = int(mins) * 60 + float(secs)
-            lines.append({"time": timestamp, "text": text})
+            lines.append({"time": timestamp, "text": _romanize_non_bengali(text)})
         except Exception:
             continue
     return sorted(lines, key=lambda x: x["time"])
@@ -31,12 +90,14 @@ def _parse_plain_lyrics(plain_text: str, duration: float) -> list:
     total = len(raw_lines)
     for i, text in enumerate(raw_lines):
         t = round((i / total) * dur, 2)
-        lines.append({"time": t, "text": text})
+        lines.append({"time": t, "text": _romanize_non_bengali(text)})
     return lines
 
 def _clean_title(title: str) -> str:
     # Strip tab notification numbers like (22), (1), [5]
     t = re.sub(r'^\s*[\(\[]\d+[\)\]]\s*', '', title)
+    # Strip prefix tags like Lyrical:, Video:, Full Video:, Audio:, Official Video:
+    t = re.sub(r'^\s*(lyrical|full video|official video|video|audio|full song|hd|4k|track)\s*:\s*', '', t, flags=re.IGNORECASE)
     t = re.sub(r'[\(\[\{].*?[\)\]\}]', '', t)
     parts = [p.strip() for p in re.split(r'[\|]', t) if p.strip()]
     if parts:

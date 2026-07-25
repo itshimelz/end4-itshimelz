@@ -65,12 +65,39 @@ Item {
         spacing: 6
         clip: true
 
-        highlightMoveDuration: 300
+        highlightMoveDuration: 400
+
+        header: Item {
+            width: lyricsListView.width
+            height: Math.max(20, lyricsListView.height / 2 - 20)
+        }
+
+        footer: Item {
+            width: lyricsListView.width
+            height: Math.max(20, lyricsListView.height / 2 - 20)
+        }
+
+        NumberAnimation {
+            id: scrollAnimation
+            target: lyricsListView
+            property: "contentY"
+            duration: 450
+            easing.type: Easing.OutCubic
+        }
 
         function scrollToActive() {
             if (LyricsService.activeIndex >= 0 && LyricsService.activeIndex < lyricsListView.count) {
                 lyricsListView.currentIndex = LyricsService.activeIndex
-                lyricsListView.positionViewAtIndex(LyricsService.activeIndex, ListView.Center)
+                const item = lyricsListView.itemAtIndex(LyricsService.activeIndex)
+                if (item) {
+                    const targetY = item.y - (lyricsListView.height / 2) + (item.height / 2)
+                    scrollAnimation.stop()
+                    scrollAnimation.from = lyricsListView.contentY
+                    scrollAnimation.to = targetY
+                    scrollAnimation.start()
+                } else {
+                    lyricsListView.positionViewAtIndex(LyricsService.activeIndex, ListView.Center)
+                }
             }
         }
 
@@ -90,6 +117,7 @@ Item {
         }
 
         onMovementStarted: {
+            scrollAnimation.stop()
             root.isUserInteracting = true
             autoResyncTimer.restart()
         }
@@ -119,6 +147,7 @@ Item {
                 TextEdit {
                     id: lyricText
                     Layout.fillWidth: true
+                    horizontalAlignment: root.textAlignment
                     readOnly: true
                     selectByMouse: true
                     activeFocusOnPress: false
@@ -142,8 +171,8 @@ Item {
                         return 0.25
                     }
 
-                    Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
-                    Behavior on color { ColorAnimation { duration: 200 } }
+                    Behavior on opacity { NumberAnimation { duration: 350; easing.type: Easing.OutCubic } }
+                    Behavior on color { ColorAnimation { duration: 300 } }
                 }
             }
 
