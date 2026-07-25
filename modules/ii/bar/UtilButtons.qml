@@ -114,7 +114,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     colBackground: recordingItem.isRecording ? Appearance.colors.colPrimaryContainer : "transparent"
                     buttonRadius: recordingItem.isRecording ? Appearance.rounding.normal : implicitHeight / 2
-                    onClicked: Quickshell.execDetached([Directories.recordScriptPath])
+                    onClicked: recordingItem.isRecording ? Quickshell.execDetached([Directories.recordScriptPath]) : Quickshell.execDetached(["qs", "-p", Quickshell.shellPath(""), "ipc", "call", "region", "record"])
 
                     Behavior on colBackground { ColorAnimation { duration: 200 } }
                     Behavior on buttonRadius { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
@@ -248,7 +248,7 @@ Item {
                         id: mouseArea
                         anchors.fill: parent
                         hoverEnabled: true
-                        onClicked: Quickshell.execDetached([Directories.recordScriptPath])
+                        onClicked: recordingItemM3.isRecording ? Quickshell.execDetached([Directories.recordScriptPath]) : Quickshell.execDetached(["qs", "-p", Quickshell.shellPath(""), "ipc", "call", "region", "record"])
                     }
                 }
             }
