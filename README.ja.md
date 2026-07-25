@@ -6,8 +6,10 @@
 
 # 💠 end4-itshimelz
 
-**[@end-4](https://github.com/end-4) 氏による [illogical-impulse](https://github.com/end-4/dots-hyprland) のカスタマイズフォーク**  
-**[@end-4](https://github.com/end-4)** 氏が開発 • **[@itshimelz](https://github.com/itshimelz)** がカスタマイズおよびメンテナンス
+**[@pctrade](https://github.com/pctrade) 氏の [end4-pC](https://github.com/pctrade/end4-pC) のカスタマイズフォーク**  
+*( [@end-4](https://github.com/end-4) 氏の [illogical-impulse](https://github.com/end-4/dots-hyprland) から派生)*
+
+オリジナル **[@end-4](https://github.com/end-4)** 氏 • アップストリーム **[@pctrade](https://github.com/pctrade)** 氏 • カスタマイズ＆メンテナンス **[@itshimelz](https://github.com/itshimelz)**
 
 [English](README.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
 
@@ -78,11 +80,12 @@ hl.bind("SUPER + escape", hl.dsp.global("quickshell:settingsToggle"), {descripti
 
 ## 🙏 アップストリーム＆クレジット
 
-このプロジェクトは、**[@end-4](https://github.com/end-4)** 氏によって作成された **[illogical-impulse](https://github.com/end-4/dots-hyprland)** のカスタマイズフォークです。
+このプロジェクトは、**[@pctrade](https://github.com/pctrade)** 氏の **[end4-pC](https://github.com/pctrade/end4-pC)** のカスタマイズフォークであり、**[@end-4](https://github.com/end-4)** 氏によるオリジナルの **[illogical-impulse](https://github.com/end-4/dots-hyprland)** から派生したものです。
 
 オリジナルの作者および貢献者の皆さまに心から感謝いたします。
 
 - **[@end-4](https://github.com/end-4)** — **[illogical-impulse / dots-hyprland](https://github.com/end-4/dots-hyprland)** のオリジナル作者。素晴らしい Hyprland デスクトップシェル＆dotfiles プロジェクトです 🫡
+- **[@pctrade](https://github.com/pctrade)** — **[end4-pC](https://github.com/pctrade/end4-pC)** (直接のアップストリームリポジトリ) の開発者 🛠️
 - **[@itshimelz](https://github.com/itshimelz)** — カスタマイズ、PipeWire オーディオ出力切替、MPRIS プレイヤー同期、キーバインドガイド、およびメンテナンス 🚀
 - **[@gh0stzk](https://github.com/gh0stzk)** — 天気ウィジェットの実現に必要な天気 API 連携を提供 🙌
 - **[@StarS2112](https://github.com/StarS2112)** — コミュニティおよび紹介のサポート 🙌
@@ -91,6 +94,6 @@ hl.bind("SUPER + escape", hl.dsp.global("quickshell:settingsToggle"), {descripti
 
 <div align="center">
 
-**[@end-4](https://github.com/end-4)** 氏の **[illogical-impulse](https://github.com/end-4/dots-hyprland)** をベースに制作 • **[@itshimelz](https://github.com/itshimelz)** が ❤️ を込めてカスタマイズ
+**[@end-4](https://github.com/end-4)** 氏の **[illogical-impulse](https://github.com/end-4/dots-hyprland)** および **[@pctrade](https://github.com/pctrade)** 氏の **[end4-pC](https://github.com/pctrade/end4-pC)** をベースに制作 • **[@itshimelz](https://github.com/itshimelz)** が ❤️ を込めてカスタマイズ
 
 </div>

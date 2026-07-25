@@ -6,8 +6,10 @@
 
 # 💠 end4-itshimelz
 
-**基于 [@end-4](https://github.com/end-4) 开发的 [illogical-impulse](https://github.com/end-4/dots-hyprland) 的个人定制分支**  
-由 **[@end-4](https://github.com/end-4)** 原创开发 • **[@itshimelz](https://github.com/itshimelz)** 定制与维护
+**基于 [@pctrade](https://github.com/pctrade) 的 [end4-pC](https://github.com/pctrade/end4-pC) 的个人定制分支**  
+*(衍生自 [@end-4](https://github.com/end-4) 的 [illogical-impulse](https://github.com/end-4/dots-hyprland))*
+
+原作者 **[@end-4](https://github.com/end-4)** • 上游分支 **[@pctrade](https://github.com/pctrade)** • 定制与维护 **[@itshimelz](https://github.com/itshimelz)**
 
 [English](README.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
 
@@ -78,11 +80,12 @@ hl.bind("SUPER + escape", hl.dsp.global("quickshell:settingsToggle"), {descripti
 
 ## 🙏 上游致谢与 Credit
 
-本项目是基于 **[@end-4](https://github.com/end-4)** 创作的 **[illogical-impulse](https://github.com/end-4/dots-hyprland)** 的定制分支。
+本项目是基于 **[@pctrade](https://github.com/pctrade)** 的 **[end4-pC](https://github.com/pctrade/end4-pC)** 的定制分支，衍生自 **[@end-4](https://github.com/end-4)** 创作的 **[illogical-impulse](https://github.com/end-4/dots-hyprland)**。
 
 衷心感谢原作者及相关贡献者：
 
 - **[@end-4](https://github.com/end-4)** — 原始项目 **[illogical-impulse / dots-hyprland](https://github.com/end-4/dots-hyprland)** 的创作者。非常出色的 Linux Hyprland 桌面 Shell 与 dotfiles 生态 🫡
+- **[@pctrade](https://github.com/pctrade)** — **[end4-pC](https://github.com/pctrade/end4-pC)** (直接上游分支) 的开发者 🛠️
 - **[@itshimelz](https://github.com/itshimelz)** — 分支定制、PipeWire 音频输出切换、MPRIS 播放器同步、快捷键指南及后续维护 🚀
 - **[@gh0stzk](https://github.com/gh0stzk)** — 提供了天气 API 集成，让天气小组件得以实现 🙌
 - **[@StarS2112](https://github.com/StarS2112)** — 社区与展示支持 🙌
@@ -91,6 +94,6 @@ hl.bind("SUPER + escape", hl.dsp.global("quickshell:settingsToggle"), {descripti
 
 <div align="center">
 
-基于 **[@end-4](https://github.com/end-4)** 的 **[illogical-impulse](https://github.com/end-4/dots-hyprland)** • 由 **[@itshimelz](https://github.com/itshimelz)** 用 ❤️ 定制
+基于 **[@end-4](https://github.com/end-4)** 的 **[illogical-impulse](https://github.com/end-4/dots-hyprland)** 与 **[@pctrade](https://github.com/pctrade)** 的 **[end4-pC](https://github.com/pctrade/end4-pC)** • 由 **[@itshimelz](https://github.com/itshimelz)** 用 ❤️ 定制
 
 </div>

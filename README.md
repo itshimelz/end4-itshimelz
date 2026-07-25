@@ -2,9 +2,10 @@
 
 # 💠 end4-itshimelz
 
-**A customized fork of [illogical-impulse](https://github.com/end-4/dots-hyprland) by [@end-4](https://github.com/end-4)**  
+**A customized fork of [end4-pC](https://github.com/pctrade/end4-pC) by [@pctrade](https://github.com/pctrade)**  
+*(derived from [illogical-impulse](https://github.com/end-4/dots-hyprland) by [@end-4](https://github.com/end-4))*
 
-Created by **[@end-4](https://github.com/end-4)** • Customized & Maintained by **[@itshimelz](https://github.com/itshimelz)**
+Original Project by **[@end-4](https://github.com/end-4)** • Forked from **[@pctrade](https://github.com/pctrade)** • Customized & Maintained by **[@itshimelz](https://github.com/itshimelz)**
 
 [English](README.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
 
@@ -75,11 +76,12 @@ hl.env("qsConfig", "end4-itshimelz")
 
 ## 🙏 Upstream & Credits
 
-This project is a customized fork of **[illogical-impulse](https://github.com/end-4/dots-hyprland)**, created by **[@end-4](https://github.com/end-4)**.
+This project is a customized fork of **[end4-pC](https://github.com/pctrade/end4-pC)** by **[@pctrade](https://github.com/pctrade)**, which is derived from **[illogical-impulse](https://github.com/end-4/dots-hyprland)** created by **[@end-4](https://github.com/end-4)**.
 
-Huge thanks to the original author and all contributors who made this project possible:
+Huge thanks to the original authors and all contributors who made this project possible:
 
 - **[@end-4](https://github.com/end-4)** — Original author & creator of **[illogical-impulse / dots-hyprland](https://github.com/end-4/dots-hyprland)**. An outstanding Hyprland desktop shell & dotfiles ecosystem 🫡
+- **[@pctrade](https://github.com/pctrade)** — Author & creator of **[end4-pC](https://github.com/pctrade/end4-pC)** (the direct upstream fork) 🛠️
 - **[@itshimelz](https://github.com/itshimelz)** — Customization, PipeWire audio port switcher, instant MPRIS player sync, responsive keybind cheatsheet, and maintenance 🚀
 - **[@gh0stzk](https://github.com/gh0stzk)** — Weather API integration that powers the weather widget 🙌
 - **[@StarS2112](https://github.com/StarS2112)** — Showcase and community support 🙌
@@ -88,6 +90,6 @@ Huge thanks to the original author and all contributors who made this project po
 
 <div align="center">
 
-Based on **[illogical-impulse](https://github.com/end-4/dots-hyprland)** by **[@end-4](https://github.com/end-4)** • Customized with ❤️ by **[@itshimelz](https://github.com/itshimelz)**
+Based on **[illogical-impulse](https://github.com/end-4/dots-hyprland)** by **[@end-4](https://github.com/end-4)** & **[end4-pC](https://github.com/pctrade/end4-pC)** by **[@pctrade](https://github.com/pctrade)** • Customized with ❤️ by **[@itshimelz](https://github.com/itshimelz)**
 
 </div>
