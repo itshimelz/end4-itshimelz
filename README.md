@@ -7,7 +7,7 @@
 
 Original Project by **[@end-4](https://github.com/end-4)** • Forked from **[@pctrade](https://github.com/pctrade)** • Customized & Maintained by **[@itshimelz](https://github.com/itshimelz)**
 
-[English](README.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
+[English](README.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md) | [বাংলা](README.bn.md)
 
 </div>
 

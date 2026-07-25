@@ -11,7 +11,7 @@
 
 原作者 **[@end-4](https://github.com/end-4)** • 上游分支 **[@pctrade](https://github.com/pctrade)** • 定制与维护 **[@itshimelz](https://github.com/itshimelz)**
 
-[English](README.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
+[English](README.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md) | [বাংলা](README.bn.md)
 
 </div>
 

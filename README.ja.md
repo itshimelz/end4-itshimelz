@@ -11,7 +11,7 @@
 
 オリジナル **[@end-4](https://github.com/end-4)** 氏 • アップストリーム **[@pctrade](https://github.com/pctrade)** 氏 • カスタマイズ＆メンテナンス **[@itshimelz](https://github.com/itshimelz)**
 
-[English](README.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
+[English](README.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md) | [বাংলা](README.bn.md)
 
 </div>
 
