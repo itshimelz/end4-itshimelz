@@ -63,8 +63,13 @@ else
     FILEPATH="$RECORDING_DIR/$FILENAME"
     echo "$FILEPATH" > "$LAST_FILE_TMP"
 
+    AUDIO_MSG="without sound"
+    if [[ $SOUND_FLAG -eq 1 ]]; then
+        AUDIO_MSG="with sound"
+    fi
+
     if [[ $FULLSCREEN_FLAG -eq 1 ]]; then
-        notify-send "Starting recording" "$FILENAME" -a 'Recorder' & disown
+        notify-send "Starting recording ($AUDIO_MSG)" "$FILENAME" -a 'Recorder' & disown
         set_recording_state true
         if [[ $SOUND_FLAG -eq 1 ]]; then
             wf-recorder -o "$(getactivemonitor)" --pixel-format yuv420p -f "$FILEPATH" -t --audio="$(getaudiooutput)"
@@ -80,7 +85,7 @@ else
                 exit 1
             fi
         fi
-        notify-send "Starting recording" "$FILENAME" -a 'Recorder' & disown
+        notify-send "Starting recording ($AUDIO_MSG)" "$FILENAME" -a 'Recorder' & disown
         set_recording_state true
         if [[ $SOUND_FLAG -eq 1 ]]; then
             wf-recorder --pixel-format yuv420p -f "$FILEPATH" -t --geometry "$region" --audio="$(getaudiooutput)"

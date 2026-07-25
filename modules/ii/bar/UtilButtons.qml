@@ -1,6 +1,7 @@
 import qs
 import qs.modules.common
 import qs.modules.common.widgets
+import qs.modules.common.functions
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -151,10 +152,105 @@ Item {
 
         Component {
             id: screenRecordM3
-            UtilButton {
-                iconText: Persistent.states.record.enable ? "stop_circle" : "screen_record"
-                forceHovered: Persistent.states.record.enable
-                onClicked: Quickshell.execDetached([Directories.recordScriptPath])
+            Item {
+                id: recordingItemM3
+                implicitWidth: btnM3.implicitWidth
+                implicitHeight: btnM3.implicitHeight
+
+                property bool isRecording: Persistent.states.record.enable
+                property int elapsedSeconds: 0
+
+                onIsRecordingChanged: {
+                    if (!isRecording) elapsedSeconds = 0
+                }
+
+                function formatTime(s) {
+                    return Math.floor(s / 60).toString().padStart(2, '0') + ":" + (s % 60).toString().padStart(2, '0')
+                }
+
+                Timer {
+                    interval: 1000
+                    repeat: true
+                    running: recordingItemM3.isRecording
+                    onTriggered: recordingItemM3.elapsedSeconds++
+                }
+
+                Rectangle {
+                    id: btnM3
+                    property bool hovered: mouseArea.containsMouse || recordingItemM3.isRecording
+
+                    implicitWidth: {
+                        if (root.vertical) return 26;
+                        if (recordingItemM3.isRecording) return contentRow.implicitWidth + 14;
+                        return hovered ? 54 : 26;
+                    }
+                    implicitHeight: {
+                        if (!root.vertical) return 26;
+                        if (recordingItemM3.isRecording) return contentRow.implicitHeight + 14;
+                        return hovered ? 54 : 26;
+                    }
+
+                    radius: Appearance.rounding.full
+                    color: hovered ? Appearance.colors.colPrimary : ColorUtils.transparentize(Appearance.colors.colLayer0, 0.8)
+
+                    Behavior on implicitWidth {
+                        NumberAnimation {
+                            duration: Appearance.animation.elementMoveFast.duration
+                            easing.type: Appearance.animation.elementMoveFast.easing
+                        }
+                    }
+                    Behavior on implicitHeight {
+                        NumberAnimation {
+                            duration: Appearance.animation.elementMoveFast.duration
+                            easing.type: Appearance.animation.elementMoveFast.easing
+                        }
+                    }
+                    Behavior on color {
+                        ColorAnimation { duration: Appearance.animation.elementMoveFast.duration }
+                    }
+
+                    Row {
+                        id: contentRow
+                        anchors.centerIn: parent
+                        spacing: 4
+
+                        MaterialSymbol {
+                            anchors.verticalCenter: parent.verticalCenter
+                            iconSize: Appearance.font.pixelSize.large
+                            text: recordingItemM3.isRecording ? "stop_circle" : "screen_record"
+                            color: btnM3.hovered ? Appearance.colors.colOnPrimary : Appearance.colors.colPrimary
+
+                            Behavior on color {
+                                ColorAnimation { duration: Appearance.animation.elementMoveFast.duration }
+                            }
+                        }
+
+                        Revealer {
+                            id: timerRevealer
+                            anchors.verticalCenter: parent.verticalCenter
+                            reveal: recordingItemM3.isRecording && !root.vertical
+
+                            StyledText {
+                                text: recordingItemM3.formatTime(recordingItemM3.elapsedSeconds)
+                                font.pixelSize: Appearance.font.pixelSize.small
+                                font.features: { "tnum": 1 }
+                                font.letterSpacing: -0.3
+                                color: btnM3.hovered ? Appearance.colors.colOnPrimary : Appearance.colors.colPrimary
+
+                                Behavior on color {
+                                    ColorAnimation { duration: Appearance.animation.elementMoveFast.duration }
+                                }
+                            }
+                        }
+                    }
+
+                    MouseArea {
+                        id: mouseArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: Quickshell.execDetached([Directories.recordScriptPath])
+                    }
+                }
             }
         }
 

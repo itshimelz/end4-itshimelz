@@ -247,7 +247,7 @@ Scope {
                                     text: Translation.tr("Toggle screen recording")
                                     description: Translation.tr("Start or stop wf-recorder screen capture")
                                     onClicked: {
-                                        Quickshell.execDetached(["bash", "-c", "if pidof wf-recorder > /dev/null; then killall -s SIGINT wf-recorder; notify-send 'Recording Stopped' 'Screen recording saved.' -a 'System Actions'; else wf-recorder -g \"$(slurp)\" -f ~/Videos/recording-$(date +%Y-%m-%d_%H.%M.%S).mp4 & notify-send 'Recording Started' 'Select a region. Recording to ~/Videos/' -a 'System Actions'; fi"]);
+                                        Quickshell.execDetached([Directories.recordScriptPath]);
                                         panelWindow.hide();
                                     }
                                 }
