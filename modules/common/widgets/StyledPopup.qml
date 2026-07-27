@@ -11,7 +11,13 @@ LazyLoader {
     property Item hoverTarget
     default property Item contentItem
     property real popupBackgroundMargin: 0
-    active: hoverTarget && hoverTarget.containsMouse
+    property bool manualOpen: false
+
+    active: (hoverTarget && hoverTarget.containsMouse) || manualOpen
+
+    function open() { manualOpen = true }
+    function close() { manualOpen = false }
+    function toggle() { manualOpen = !manualOpen }
 
     readonly property bool barVertical: Config.options.bar.vertical
     readonly property string barEdge: {

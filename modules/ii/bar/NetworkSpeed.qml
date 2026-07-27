@@ -42,7 +42,8 @@ MouseArea {
         let transmittedBytes = 0
         const lines = contents.split("\n")
 
-        for (const line of lines) {
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i]
             const separator = line.indexOf(":")
             if (separator < 0) continue
 
@@ -54,10 +55,10 @@ MouseArea {
 
             const received = Number(fields[0])
             const transmitted = Number(fields[8])
-            if (!Number.isFinite(received) || !Number.isFinite(transmitted)) continue
-
-            receivedBytes += received
-            transmittedBytes += transmitted
+            if (received > 0 || transmitted > 0) {
+                receivedBytes += received
+                transmittedBytes += transmitted
+            }
         }
 
         const sampleTime = Date.now()
@@ -122,7 +123,7 @@ MouseArea {
             opacity: speedLine.rate > 0 ? 1 : 0.45
 
             Behavior on opacity {
-                animation: Appearance.animation.elementMoveFast.numberAnimation.createObject(this)
+                NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
             }
         }
 

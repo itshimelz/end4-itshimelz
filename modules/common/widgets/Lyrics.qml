@@ -24,7 +24,7 @@ Item {
 
     Timer {
         id: autoResyncTimer
-        interval: 4000
+        interval: 5000
         repeat: false
         onTriggered: {
             root.isUserInteracting = false
@@ -53,7 +53,60 @@ Item {
     onVisibleChanged: {
         if (root.visible) {
             root.isUserInteracting = false
+            LyricsService.updateActiveIndex()
+            lyricsListView.scrollToActive(true)
+            Qt.callLater(() => lyricsListView.scrollToActive(false))
+        }
+    }
+
+    Component.onCompleted: {
+        if (root.visible) {
+            LyricsService.updateActiveIndex()
+            lyricsListView.scrollToActive(true)
+        }
+    }
+
+
+
+    // Floating Recenter Pill
+    RippleButton {
+        id: recenterBtn
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottomMargin: 10
+        z: 10
+        opacity: root.isUserInteracting ? 1.0 : 0.0
+        visible: opacity > 0
+        implicitHeight: 28
+        implicitWidth: recenterRow.implicitWidth + 16
+        buttonRadius: Appearance.rounding.full
+        colBackground: Appearance.colors.colPrimaryContainer
+        colBackgroundHover: Appearance.colors.colPrimaryContainerHover
+        colRipple: Appearance.colors.colPrimary
+        downAction: () => {
+            root.isUserInteracting = false
             lyricsListView.scrollToActive()
+        }
+
+        Behavior on opacity { NumberAnimation { duration: 250; easing.type: Easing.OutQuad } }
+
+        contentItem: RowLayout {
+            id: recenterRow
+            anchors.centerIn: parent
+            spacing: 6
+            MaterialSymbol {
+                text: "my_location"
+                iconSize: 14
+                color: Appearance.colors.colOnPrimaryContainer
+                Layout.alignment: Qt.AlignVCenter
+            }
+            StyledText {
+                text: Translation.tr("Recenter")
+                font.pixelSize: Appearance.font.pixelSize.smaller
+                font.weight: Font.Bold
+                color: Appearance.colors.colOnPrimaryContainer
+                Layout.alignment: Qt.AlignVCenter
+            }
         }
     }
 
@@ -85,9 +138,16 @@ Item {
             easing.type: Easing.OutCubic
         }
 
-        function scrollToActive() {
+        function scrollToActive(immediate = false) {
             if (LyricsService.activeIndex >= 0 && LyricsService.activeIndex < lyricsListView.count) {
                 lyricsListView.currentIndex = LyricsService.activeIndex
+                lyricsListView.positionViewAtIndex(LyricsService.activeIndex, ListView.Center)
+
+                if (immediate) {
+                    scrollAnimation.stop()
+                    return
+                }
+
                 const item = lyricsListView.itemAtIndex(LyricsService.activeIndex)
                 if (item) {
                     const targetY = item.y - (lyricsListView.height / 2) + (item.height / 2)
@@ -95,8 +155,6 @@ Item {
                     scrollAnimation.from = lyricsListView.contentY
                     scrollAnimation.to = targetY
                     scrollAnimation.start()
-                } else {
-                    lyricsListView.positionViewAtIndex(LyricsService.activeIndex, ListView.Center)
                 }
             }
         }
@@ -111,7 +169,9 @@ Item {
             function onStatusChanged() {
                 if (LyricsService.status === "ok") {
                     root.isUserInteracting = false
-                    lyricsListView.scrollToActive()
+                    LyricsService.updateActiveIndex()
+                    lyricsListView.scrollToActive(true)
+                    Qt.callLater(() => lyricsListView.scrollToActive(false))
                 }
             }
         }
@@ -136,6 +196,7 @@ Item {
 
             readonly property bool isActive: index === LyricsService.activeIndex
             readonly property int dist: Math.abs(index - LyricsService.activeIndex)
+            readonly property bool isInstrumental: Boolean(lineDelegate.modelData?.isInstrumental) || (lineDelegate.modelData?.text ?? "").includes("Instrumental")
 
             RowLayout {
                 id: lineContent
@@ -143,6 +204,15 @@ Item {
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 6
+
+                MaterialSymbol {
+                    visible: lineDelegate.isInstrumental
+                    text: "graphic_eq"
+                    iconSize: Appearance.font.pixelSize.normal
+                    color: lineDelegate.isActive ? Appearance.colors.colPrimary : root.textColor
+                    opacity: lineDelegate.isActive ? 1.0 : 0.4
+                    Layout.alignment: Qt.AlignVCenter
+                }
 
                 TextEdit {
                     id: lyricText
@@ -160,6 +230,7 @@ Item {
                         return Appearance.font.pixelSize.smaller
                     }
                     font.weight: lineDelegate.isActive ? Font.Bold : Font.Normal
+                    font.italic: lineDelegate.isInstrumental
                     color: lineDelegate.isActive ? (root.activeColor !== "white" ? root.activeColor : Appearance.colors.colPrimary) : root.textColor
                     selectionColor: Appearance.colors.colPrimaryContainer
                     selectedTextColor: Appearance.colors.colOnPrimaryContainer

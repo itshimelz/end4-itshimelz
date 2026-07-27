@@ -52,6 +52,9 @@ ContentPage {
         { id: "updatesCount",      name: Translation.tr("Updates"),              icon: "deployed_code_update" },
         { id: "docktoPanel",       name: Translation.tr("Dock to Panel"),        icon: "apps" },
         { id: "visualizer",        name: Translation.tr("Visualizer"),           icon: "graphic_eq" },
+        { id: "clipboard",         name: Translation.tr("Clipboard"),            icon: "content_paste" },
+        { id: "focusTimer",        name: Translation.tr("Focus Timer"),          icon: "timer" },
+        { id: "quickNotes",        name: Translation.tr("Quick Notes"),          icon: "edit_note" },
         { id: "hyprlandXkbIndicator",   name: Translation.tr("Keyboard Layout"), icon: "keyboard" },
         { id: "divisor",            name: Translation.tr("Divider"),             icon: "horizontal_distribute" },
     ]

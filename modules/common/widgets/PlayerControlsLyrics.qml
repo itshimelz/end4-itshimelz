@@ -48,13 +48,14 @@ Item {
         RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            spacing: 15
+            spacing: 10
 
             Rectangle {
                 id: artBackground
-                implicitHeight: 120
-                implicitWidth: 120
-                radius: 16
+                Layout.alignment: Qt.AlignTop
+                implicitHeight: 85
+                implicitWidth: 85
+                radius: 12
                 color: ColorUtils.transparentize(root.blendedColors.colLayer1, 0.5)
 
                 layer.enabled: true

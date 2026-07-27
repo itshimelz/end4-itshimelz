@@ -73,6 +73,9 @@ Item {
             case "sysTray":
                 return Appearance.colors.colSecondaryContainer;
             case "resources":
+            case "clipboard":
+            case "focusTimer":
+            case "quickNotes":
                 return Appearance.colors.colTertiaryContainer;
             case "systemIcons":
                 return Appearance.colors.colPrimary; 
