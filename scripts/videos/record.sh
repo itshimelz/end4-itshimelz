@@ -3,7 +3,7 @@ CONFIG_FILE="$HOME/.config/illogical-impulse/config.json"
 JSON_PATH=".screenRecord.savePath"
 CUSTOM_PATH=$(jq -r "$JSON_PATH" "$CONFIG_FILE" 2>/dev/null)
 RECORDING_DIR=""
-if [[ -n "$CUSTOM_PATH" ]]; then
+if [[ -n "$CUSTOM_PATH" && "$CUSTOM_PATH" != "null" ]]; then
     RECORDING_DIR="$CUSTOM_PATH"
 else
     RECORDING_DIR="$HOME/Videos"
@@ -48,18 +48,33 @@ for ((i=0;i<${#ARGS[@]};i++)); do
     fi
 done
 
+LAST_FILE_TMP="/tmp/last_recording_path.txt"
+
 if pgrep wf-recorder > /dev/null; then
-    notify-send "Recording Stopped" "Stopped" -a 'Recorder' &
+    SAVED_FILE=$(cat "$LAST_FILE_TMP" 2>/dev/null)
+    if [[ -z "$SAVED_FILE" ]]; then
+        SAVED_FILE="$RECORDING_DIR"
+    fi
+    notify-send "Recording Stopped" "Saved to:\n$SAVED_FILE" -a 'Recorder' -i 'video-x-generic' &
     pkill wf-recorder &
     set_recording_state false
 else
+    FILENAME="recording_$(getdate).mp4"
+    FILEPATH="$RECORDING_DIR/$FILENAME"
+    echo "$FILEPATH" > "$LAST_FILE_TMP"
+
+    AUDIO_MSG="without sound"
+    if [[ $SOUND_FLAG -eq 1 ]]; then
+        AUDIO_MSG="with sound"
+    fi
+
     if [[ $FULLSCREEN_FLAG -eq 1 ]]; then
-        notify-send "Starting recording" 'recording_'"$(getdate)"'.mp4' -a 'Recorder' & disown
+        notify-send "Starting recording ($AUDIO_MSG)" "$FILENAME" -a 'Recorder' & disown
         set_recording_state true
         if [[ $SOUND_FLAG -eq 1 ]]; then
-            wf-recorder -o "$(getactivemonitor)" --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t --audio="$(getaudiooutput)"
+            wf-recorder -o "$(getactivemonitor)" --pixel-format yuv420p -f "$FILEPATH" -t --audio="$(getaudiooutput)"
         else
-            wf-recorder -o "$(getactivemonitor)" --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t
+            wf-recorder -o "$(getactivemonitor)" --pixel-format yuv420p -f "$FILEPATH" -t
         fi
     else
         if [[ -n "$MANUAL_REGION" ]]; then
@@ -70,12 +85,12 @@ else
                 exit 1
             fi
         fi
-        notify-send "Starting recording" 'recording_'"$(getdate)"'.mp4' -a 'Recorder' & disown
+        notify-send "Starting recording ($AUDIO_MSG)" "$FILENAME" -a 'Recorder' & disown
         set_recording_state true
         if [[ $SOUND_FLAG -eq 1 ]]; then
-            wf-recorder --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t --geometry "$region" --audio="$(getaudiooutput)"
+            wf-recorder --pixel-format yuv420p -f "$FILEPATH" -t --geometry "$region" --audio="$(getaudiooutput)"
         else
-            wf-recorder --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t --geometry "$region"
+            wf-recorder --pixel-format yuv420p -f "$FILEPATH" -t --geometry "$region"
         fi
     fi
     set_recording_state false
