@@ -159,14 +159,13 @@ Scope {
                             DragApps {
                                 id: dragSlots
                                 visible: dockRow.hasPinnedApps
-                                Layout.fillHeight: true
-                                Layout.topMargin: 0
-                                Layout.leftMargin: Config.options.dock.showPinButton ? 0 : -15
-
+                                Layout.fillHeight: false
+                                Layout.topMargin: 2
+                                Layout.leftMargin: Config.options.dock.showPinButton ? 0 : -18
                                 pinnedApps:    Config.options?.dock.pinnedApps ?? []
                                 buttonPadding: dockRow.padding
                                 btnSize:       46
-                                btnSpacing:    2
+                                btnSpacing:    1
                             }
 
                             DockSeparator {
@@ -177,7 +176,6 @@ Scope {
                                 id: activeAppsArea
                                 Layout.fillHeight: true
                                 Layout.topMargin: 0
-
                                 property bool requestDockShow: false
 
                                 property var activeUnpinned: {
@@ -199,14 +197,15 @@ Scope {
                                 RowLayout {
                                     id: activeRow
                                     anchors.fill: parent
+                                    Layout.rightMargin: 10
                                     spacing: -4
 
                                     DockMedia {
                                         id: dockMedia
                                         visible: Config.options.dock.showMedia
                                         Layout.fillHeight: true
-                                        Layout.topMargin: 11
-                                        Layout.bottomMargin: 6
+                                        Layout.topMargin: 12
+                                        Layout.bottomMargin: 8
                                         Layout.leftMargin: 0
                                         buttonPadding: dockRow.padding
                                     }
@@ -216,12 +215,11 @@ Scope {
                                         delegate: DockAppButton {
                                             required property var modelData
                                             appToplevel: modelData
-                                            Layout.topMargin: 0
-                                            Layout.rightMargin: Config.options.dock.showAppsButton ? 0 : 4
-                                            Layout.leftMargin: dockMedia.visible ? 4 : 0
+                                            Layout.fillHeight: true
+                                            Layout.topMargin: 2
                                             appListRoot: appListBridge
-                                            topInset:    dockRow.padding
-                                            bottomInset: dockRow.padding
+                                            topInset:    dockRow.padding + 8
+                                            bottomInset: dockRow.padding + 8
                                         }
                                     }
                                 }
@@ -243,8 +241,8 @@ Scope {
                                 Layout.topMargin: 0
                                 visible: Config.options.dock.showAppsButton
                                 onClicked: GlobalStates.overviewOpen = !GlobalStates.overviewOpen
-                                topInset:    dockRow.padding
-                                bottomInset: Appearance.sizes.hyprlandGapsOut + dockRow.padding
+                                topInset:    dockRow.padding + 10
+                                bottomInset: dockRow.padding + 7
                                 contentItem: MaterialSymbol {
                                     anchors.fill: parent
                                     horizontalAlignment: Text.AlignHCenter

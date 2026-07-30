@@ -159,6 +159,15 @@ ContentPage {
                     }
                 }
 
+                ConfigSwitch {
+                    buttonIcon: "preview"
+                    text: Translation.tr("Preview wallpaper")
+                    checked: Config.options.background.enableWallpaperPreview
+                    onCheckedChanged: {
+                        Config.options.background.enableWallpaperPreview = checked;
+                    }
+                }
+
                 ConfigSpinBox {
                     icon: "timer"
                     text: Translation.tr("Wallpaper change interval (min)")

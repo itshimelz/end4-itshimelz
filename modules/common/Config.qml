@@ -365,6 +365,7 @@ Singleton {
                 property string centeredWallpaperColor: "primaryContainer"
                 property bool centeredWallpaperOnlyWhenLocked: false
                 property string wallpaperAnimation: "magic"
+                property bool enableWallpaperPreview: false
                 property string thumbnailPath: ""
                 property bool hideWhenFullscreen: true
                 property JsonObject parallax: JsonObject {
