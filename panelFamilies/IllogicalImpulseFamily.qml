@@ -52,4 +52,5 @@ Scope {
     PanelLoader { component: DesktopMenu {} }
     PanelLoader { component: DropShelfPanel {} }
     PanelLoader { component: QuickActions {} }
+    PanelLoader { component: NiriBackdrop {} }
 }
