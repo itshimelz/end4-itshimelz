@@ -63,7 +63,7 @@ ContentPage {
                         spacing: 8
 
                         MaterialSymbol {
-                            text: "music_note_2"
+                            text: "music_note"
                             iconSize: Appearance.font.pixelSize.huge
                             color: Appearance.colors.colPrimary
                         }
@@ -1027,7 +1027,7 @@ ContentPage {
                 ConfigTextArea {
                     id: liveWallpapersPathField
                     Layout.fillWidth: true
-                    buttonIcon: "video_template"
+                    buttonIcon: "video_file"
                     text: Translation.tr("Live Wallpaper Folder")
                     placeholderText: Translation.tr("e.g., /home/user/Videos/Wallpapers")
                     fieldWidth: 300
