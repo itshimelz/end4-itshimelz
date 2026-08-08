@@ -28,7 +28,7 @@ Item {
     RowLayout {
         id: rowLayout
         anchors.centerIn: parent
-        spacing: isMaterial ? 6 : 10
+        spacing: isMaterial ? 6 : root.vertical ? 6 : 10
 
         Revealer {
             Layout.alignment: Qt.AlignVCenter

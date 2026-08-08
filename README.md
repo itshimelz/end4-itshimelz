@@ -74,9 +74,23 @@ hl.env("qsConfig", "end4-itshimelz")
 
 ---
 
-## 🙏 Upstream & Credits
-
 This project is a customized fork of **[end4-pC](https://github.com/pctrade/end4-pC)** by **[@pctrade](https://github.com/pctrade)**, which is derived from **[illogical-impulse](https://github.com/end-4/dots-hyprland)** created by **[@end-4](https://github.com/end-4)**.
+
+---
+
+## ❓ FAQ
+
+### How do I see my keybinds?
+
+Open the launcher (`SUPER`) and type `<` — it'll show you the full list of configured keybinds.
+
+### Why doesn't Settings have a search bar?
+
+It doesn't need one — the launcher already does that job. Open the launcher (`SUPER`) and just type what you're looking for (e.g. `wallpaper`, `bar`, `blur`); it'll match against page names and section keywords and jump you straight to the right Settings page, so there's no need for a separate search inside Settings itself.
+
+---
+
+## 🙏 Upstream & Credits
 
 Huge thanks to the original authors and all contributors who made this project possible:
 
